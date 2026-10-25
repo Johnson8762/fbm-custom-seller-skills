@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-zach-product-research 交付生成/校验脚本 v2
+product-research 交付生成/校验脚本 v2
 
 输入一个统一 JSON 数据包，生成：
 1. Markdown 正式报告（v2: 从 chapters 模板渲染）
@@ -27,7 +27,7 @@ v2 核心变化：
   python render_deliverables.py all --input /absolute/path/to/payload.json --root /path/to/repo/root
 
   # 或使用相对路径（相对于脚本所在目录）：
-  cd /path/to/skills/zach-product-research/scripts
+  cd /path/to/skills/product-research/scripts
   python render_deliverables.py all --input ../payload.json
 """
 
@@ -1297,7 +1297,7 @@ def validate_insight_quality(md_path: Path) -> list[str]:
         warnings.append("洞察质量：缺少产品矩阵（Tier 1/2/3）")
     else:
         tier_section = content[content.lower().find("tier"):] if "tier" in content.lower() else ""
-        if tier_section and re.search(r"待确认|待定|待 Zach 确认|TBD", tier_section[:500]):
+        if tier_section and re.search(r"待确认|待定|TBD", tier_section[:500]):
             warnings.append("洞察质量：产品矩阵含「待确认」/「待定」占位，必须给出具体规格")
 
     if len(lines) < 250:

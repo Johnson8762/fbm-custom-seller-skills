@@ -1,6 +1,6 @@
-<!-- 通用模式（原 zach-product-research），已改为 box 路径；Sorftime 工具名去掉 mcp_sorftime_ 前缀，走 user-sorftime MCP -->
+<!-- 通用模式（原 product-research），已改为 box 路径；Sorftime 工具名去掉 mcp_sorftime_ 前缀，走 user-sorftime MCP -->
 ---
-name: zach-product-research
+name: product-research
 description: 基于Sorftime MCP的选品分析，发现高潜力市场机会、多维度属性标注与交叉分析、验证竞争格局、测算投入产出、输出Go/No-Go决策与选品报告。新品上架工作流第一步
 argument-hint: "[产品/类目关键词] [站点]"
 user-invocable: true
@@ -607,7 +607,7 @@ user-invocable: true
 ```
 
 ⛔ **禁止事项**：
-- 不允许"待 Zach 确认"、"待定"、"建议进一步调研"等占位语
+- 不允许"待确认"、"待定"、"建议进一步调研"等占位语
 - 不允许只列方向不给具体规格（如"建议做大容量"必须改为"建议做 20000mAh"）
 - 不允许不标对标竞品（必须有具体 ASIN）
 - 不允许不给目标定价（必须基于 Step 3 测算）

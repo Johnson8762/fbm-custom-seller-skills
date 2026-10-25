@@ -67,4 +67,4 @@ set -a && source .env && set +a
 
 ## License
 
-`amazon-aba-keyword-monitor/` 与 `feature-demand-validator/` 目录保留其原始 MIT License（含上游作者署名）。
+`amazon-aba-keyword-monitor/` 保留其 MIT License（Copyright (c) 2026，无个人署名）。`feature-demand-validator/` 不再附带上游 License。

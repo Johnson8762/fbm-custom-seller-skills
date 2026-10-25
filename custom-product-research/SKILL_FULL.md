@@ -7,7 +7,7 @@ description: 当用户要对一个定制化/个性化品类（或任意亚马逊
 
 ## 运行环境（box）——合并说明
 
-本技能合并了原 `custom_product_research`（定制化品类调研，**默认模式**，正文即此版）与 `zach-product-research`（通用品类调研，**通用模式**）。
+本技能合并了原 `custom_product_research`（定制化品类调研，**默认模式**，正文即此版）与 `product-research`（通用品类调研，**通用模式**）。
 - 通用模式完整流程：`custom-product-research/references/generic_mode_SKILL.md`（脚本 `*_generic.py`，模板 `assets/generic/`、`agents/generic/`、`evals/generic/`，Schema `references/payload_schema_v2.md`、`references/analysis_patterns.md`）
 - 定制模式文件：`custom-product-research/scripts/render_deliverables.py`、`parse_top100_dimensions.py`、`cross_analysis.py`；`custom-product-research/references/payload_schema_v2_custom.md`、`analysis_patterns_custom.md`、`html_report_spec.md`；`custom-product-research/agents/`；`custom-product-research/assets/`
 - 渲染：`python custom-product-research/scripts/render_deliverables.py all --input <unified_payload.json>`（子命令 `generate` / `validate` / `all`；`--root` 默认 `reports/product-research`，产物落在 `reports/product-research/工作成果/brands/<品牌>/市场调研/<品类>/<版本>/`）
