@@ -1,0 +1,6 @@
+{"product_name":"Custom Leather Notebook","generated_date":"2026-10-24","visual_strategy":"暖棕色系，突出刻字细节",
+"hero_image":{"strategy":"纯白底 85% 占比","prompt":"Product photo of a brown full-grain leather A5 journal with engraved name, pure white background RGB 255,255,255"},
+"secondary_images":[{"type":"Usage Context","strategy":"书桌场景","prompt":"..."}],
+"aplus_content":[{"module":"Brand Story Banner","strategy":"手工感","prompt":"..."}],
+"ad_creatives":[{"variant":"A","name":"Clean Product Focus","prompt":"..."}],
+"ab_tests":[{"dimension":"Lighting","hypothesis":"暖光提升点击","original":"...","variation_prompt":"..."}]}

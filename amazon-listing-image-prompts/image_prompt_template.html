@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Prompts — {{PRODUCT_NAME}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #12121a;
+    --bg-card: #1a1a25;
+    --bg-card-hover: #22222f;
+    --bg-prompt: #0d0d14;
+    --text-primary: #e8e8f0;
+    --text-secondary: #8888a0;
+    --text-muted: #555568;
+    --accent-1: #6c5ce7;
+    --accent-2: #a29bfe;
+    --accent-gradient: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    --accent-hero: #ff6b6b;
+    --accent-secondary: #ffa502;
+    --accent-aplus: #2ed573;
+    --accent-ads: #1e90ff;
+    --accent-abtest: #ff6348;
+    --border: rgba(255,255,255,0.06);
+    --border-hover: rgba(255,255,255,0.12);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.3);
+    --transition: all 0.2s ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* --- Header --- */
+.header {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 32px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(20px);
+}
+
+.header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-title {
+    font-size: 20px;
+    font-weight: 700;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.header-meta {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* --- Navigation --- */
+.nav {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    position: sticky;
+    top: 72px;
+    z-index: 99;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 4px;
+}
+
+.nav-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 16px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    transition: var(--transition);
+}
+
+.nav-item:hover {
+    color: var(--text-primary);
+    border-bottom-color: var(--accent-2);
+}
+
+/* --- Main Content --- */
+.main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px;
+}
+
+/* --- Section --- */
+.section {
+    margin-bottom: 48px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.section-icon {
+    font-size: 24px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* --- Cards Grid --- */
+.cards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+/* --- Prompt Card --- */
+.prompt-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.prompt-card:hover {
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow);
+    transform: translateY(-1px);
+}
+
+.card-header {
+    padding: 20px 24px 12px;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.card-subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.card-strategy {
+    padding: 0 24px 16px;
+}
+
+.strategy-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--accent-2);
+    margin-bottom: 6px;
+}
+
+.strategy-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    padding: 10px 14px;
+    background: rgba(108, 92, 231, 0.08);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--accent-1);
+}
+
+.card-prompt {
+    border-top: 1px solid var(--border);
+    padding: 16px 24px 20px;
+}
+
+.prompt-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.prompt-label span {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+}
+
+.copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    background: rgba(108, 92, 231, 0.15);
+    border: 1px solid rgba(108, 92, 231, 0.3);
+    border-radius: 6px;
+    color: var(--accent-2);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+}
+
+.copy-btn:hover {
+    background: rgba(108, 92, 231, 0.25);
+    border-color: var(--accent-1);
+}
+
+.copy-btn.copied {
+    background: rgba(46, 213, 115, 0.2);
+    border-color: rgba(46, 213, 115, 0.5);
+    color: #2ed573;
+}
+
+.prompt-text {
+    background: var(--bg-prompt);
+    padding: 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    line-height: 1.6;
+    color: var(--text-primary);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+}
+
+.prompt-text::-webkit-scrollbar {
+    width: 6px;
+}
+
+.prompt-text::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.prompt-text::-webkit-scrollbar-thumb {
+    background: var(--text-muted);
+    border-radius: 3px;
+}
+
+/* --- Copy All Button --- */
+.copy-all-bar {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 200;
+}
+
+.copy-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: var(--accent-gradient);
+    border: none;
+    border-radius: 50px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(108, 92, 231, 0.4);
+    transition: var(--transition);
+    font-family: inherit;
+}
+
+.copy-all-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 28px rgba(108, 92, 231, 0.5);
+}
+
+/* --- Toast --- */
+.toast {
+    position: fixed;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-card);
+    border: 1px solid var(--accent-1);
+    border-radius: 50px;
+    padding: 10px 24px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent-2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    transition: top 0.3s ease;
+    z-index: 300;
+}
+
+.toast.show {
+    top: 24px;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .header { padding: 16px; }
+    .main { padding: 16px; }
+    .card-header { padding: 16px; }
+    .card-prompt { padding: 12px 16px 16px; }
+    .card-strategy { padding: 0 16px 12px; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+    <div class="header-inner">
+        <div class="header-title">🎨 Image Prompts — {{PRODUCT_NAME}}</div>
+        <div class="header-meta">Generated: {{GENERATED_DATE}} · Image-Skill</div>
+    </div>
+</header>
+
+<nav class="nav">
+    <div class="nav-inner">
+        {{NAV_ITEMS}}
+    </div>
+</nav>
+
+<main class="main">
+    {{SECTIONS}}
+</main>
+
+<div class="copy-all-bar">
+    <button class="copy-all-btn" onclick="copyAll()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        Copy All Prompts
+    </button>
+</div>
+
+<div class="toast" id="toast">✅ Copied to clipboard!</div>
+
+<script>
+function copyPrompt(btn) {
+    const targetId = btn.getAttribute('data-prompt');
+    const text = document.getElementById(targetId).textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        btn.classList.add('copied');
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+        showToast('✅ Prompt copied!');
+        setTimeout(() => {
+            btn.classList.remove('copied');
+            btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';
+        }, 2000);
+    });
+}
+
+function copyAll() {
+    const prompts = document.querySelectorAll('.prompt-text');
+    let allText = '';
+    prompts.forEach((p, i) => {
+        const card = p.closest('.prompt-card');
+        const title = card.querySelector('.card-title')?.textContent || `Prompt ${i+1}`;
+        allText += `=== ${title} ===\n\n${p.textContent}\n\n${'─'.repeat(60)}\n\n`;
+    });
+    navigator.clipboard.writeText(allText).then(() => {
+        showToast(`✅ All ${prompts.length} prompts copied!`);
+    });
+}
+
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// Smooth scroll for nav
+document.querySelectorAll('.nav-item').forEach(a => {
+    a.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+</script>
+</body>
+</html>
