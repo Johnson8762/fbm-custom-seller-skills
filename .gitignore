@@ -1,0 +1,34 @@
+# secrets / local config
+.env
+.env.*
+!.env.example
+*.pem
+*openid*.txt
+lark_config.json
+tools/amazon-keyword-rank/kws.py
+tools/amazon-keyword-rank/variants.json
+tools/amazon-keyword-rank/titles.json
+# data & outputs
+*.jsonl
+*.db
+*.xlsx
+*.csv
+!**/examples/**/*.csv
+logs/
+reports/
+artifacts/
+uploads/
+tmp/
+OutPut/
+daily_summary_*.json
+daily_*.out
+dpus_*.html
+amazon-aba-keyword-monitor/data/
+.exchange/
+# python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.bak*
+.DS_Store
