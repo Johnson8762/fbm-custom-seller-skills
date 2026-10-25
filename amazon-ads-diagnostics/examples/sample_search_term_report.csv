@@ -1,5 +1,5 @@
 Campaign Name,Ad Group Name,Customer Search Term,Match Type,Impressions,Clicks,Spend,7 Day Total Sales ,7 Day Total Orders (#),Keyword Bid
-SP-Leather-Exact,AG1,custom leather journal,EXACT,5200,60,$62.40,$89.90,2,1.10
-SP-Leather-Exact,AG1,personalized journal for men,EXACT,800,12,$9.60,$134.85,3,0.85
-SP-Leather-Broad,AG2,leather notebook,BROAD,9000,20,$25.00,$0.00,0,0.95
-SP-Leather-Broad,AG2,journal,BROAD,15000,30,$36.00,$44.95,1,0.70
+SP-Leather-Exact,AG1,custom leather journal,EXACT,<曝光>,<点击>,$XX.XX,$XX.XX,<销量>,$XX.XX
+SP-Leather-Exact,AG1,personalized journal for men,EXACT,<曝光>,<点击>,$XX.XX,$XX.XX,<销量>,$XX.XX
+SP-Leather-Broad,AG2,leather notebook,BROAD,<曝光>,<点击>,$XX.XX,$XX.XX,<销量>,$XX.XX
+SP-Leather-Broad,AG2,journal,BROAD,<曝光>,<点击>,$XX.XX,$XX.XX,<销量>,$XX.XX

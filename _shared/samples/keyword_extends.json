@@ -1,1 +1,172 @@
-{"doc":{"keyword":"The extended keyword text.","weekly_search_volume":"Weekly search volume.","weekly_search_rank":"Weekly search-volume rank.","monthly_search_volume":"Monthly search volume.","recommended_cpc_bid":"Recommended CPC bid (string, in USD).","seasonality":"Seasonality description text, including the peak-season months of search volume."},"data":[{"keyword":"leather journal","weekly_search_volume":25505,"weekly_search_rank":14681,"monthly_search_volume":107105,"recommended_cpc_bid":"0.69","seasonality":"Peak season of search volume: 12月"},{"keyword":"leather journals","weekly_search_volume":1579,"weekly_search_rank":339353,"monthly_search_volume":5649,"recommended_cpc_bid":"0.69","seasonality":"Peak season of search volume: 10月, 11月, 12月"},{"keyword":"journal leather","weekly_search_volume":2608,"weekly_search_rank":257556,"monthly_search_volume":10358,"recommended_cpc_bid":"0.61","seasonality":"Peak season of search volume: 12月, 1月"},{"keyword":"leather notebook journal","weekly_search_volume":2822,"weekly_search_rank":243055,"monthly_search_volume":10949,"recommended_cpc_bid":"0.80","seasonality":"Peak season of search volume: 12月"},{"keyword":"leather journal notebook","weekly_search_volume":891,"weekly_search_rank":411313,"monthly_search_volume":2483,"recommended_cpc_bid":"0.94","seasonality":"Peak season of search volume: 12月"},{"keyword":"leather bound journal","weekly_search_volume":6164,"weekly_search_rank":107595,"monthly_search_volume":26111,"recommended_cpc_bid":"0.80","seasonality":"Peak season of search volume: 12月"},{"keyword":"leather journal for men","weekly_search_volume":4692,"weekly_search_rank":157847,"monthly_search_volume":19316,"recommended_cpc_bid":"0.72","seasonality":"Peak season of search volume: 12月"},{"keyword":"leather notebook","weekly_search_volume":15302,"weekly_search_rank":37108,"monthly_search_volume":66243,"recommended_cpc_bid":"0.70","seasonality":"Peak season of search volume: 12月"},{"keyword":"leatherbound notebook journal","weekly_search_volume":111,"weekly_search_rank":770285,"monthly_search_volume":372,"recommended_cpc_bid":"1.04","seasonality":"Peak season of search volume: 12月, 1月"},{"keyword":"leather bound notebook","weekly_search_volume":2314,"weekly_search_rank":277515,"monthly_search_volume":8686,"recommended_cpc_bid":"0.91","seasonality":"Peak season of search volume: 12月"},{"keyword":"real leather journal","weekly_search_volume":12,"weekly_search_rank":1915896,"monthly_search_volume":13,"recommended_cpc_bid":"0.77","seasonality":"Peak season of search volume: 均衡"},{"keyword":"leather journals for women","weekly_search_volume":3874,"weekly_search_rank":185746,"monthly_search_volume":13857,"recommended_cpc_bid":"0.69","seasonality":"Peak season of search volume: 11月, 12月"},{"keyword":"mens leather journal","weekly_search_volume":14,"weekly_search_rank":1070569,"monthly_search_volume":89,"recommended_cpc_bid":"0.90","seasonality":"Peak season of search volume: 12月"},{"keyword":"leather diary","weekly_search_volume":23,"weekly_search_rank":1277353,"monthly_search_volume":94,"recommended_cpc_bid":"0.61","seasonality":"Peak season of search volume: 12月, 1月"},{"keyword":"notebook leather","weekly_search_volume":178,"weekly_search_rank":618075,"monthly_search_volume":982,"recommended_cpc_bid":"0.82","seasonality":"Peak season of search volume: 1月, 9月"},{"keyword":"leather journal for women","weekly_search_volume":18,"weekly_search_rank":1173495,"monthly_search_volume":101,"recommended_cpc_bid":"0.70","seasonality":"Peak season of search volume: 12月"},{"keyword":"soft leather journal","weekly_search_volume":18,"weekly_search_rank":1160613,"monthly_search_volume":100,"recommended_cpc_bid":"0.76","seasonality":"Peak season of search volume: 12月, 1月"},{"keyword":"lined leather journal","weekly_search_volume":21,"weekly_search_rank":1729381,"monthly_search_volume":105,"recommended_cpc_bid":"0.83","seasonality":"Peak season of search volume: 5月, 7月, 12月"},{"keyword":"leather notebooks","weekly_search_volume":15,"weekly_search_rank":1085676,"monthly_search_volume":107,"recommended_cpc_bid":"0.70","seasonality":"Peak season of search volume: 12月, 1月"},{"keyword":"genuine leather journal","weekly_search_volume":26,"weekly_search_rank":1344857,"monthly_search_volume":81,"recommended_cpc_bid":"0.75","seasonality":"Peak season of search volume: 均衡"}]}
+{
+  "doc": {
+    "keyword": "The extended keyword text.",
+    "weekly_search_volume": "Weekly search volume.",
+    "weekly_search_rank": "Weekly search-volume rank.",
+    "monthly_search_volume": "Monthly search volume.",
+    "recommended_cpc_bid": "Recommended CPC bid (string, in USD).",
+    "seasonality": "Seasonality description text, including the peak-season months of search volume."
+  },
+  "data": [
+    {
+      "keyword": "leather journal",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: <月份>"
+    },
+    {
+      "keyword": "leather journals",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: <月份>"
+    },
+    {
+      "keyword": "journal leather",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: <月份>"
+    },
+    {
+      "keyword": "leather notebook journal",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: <月份>"
+    },
+    {
+      "keyword": "leather journal notebook",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: <月份>"
+    },
+    {
+      "keyword": "leather bound journal",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: <月份>"
+    },
+    {
+      "keyword": "leather journal for men",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: <月份>"
+    },
+    {
+      "keyword": "leather notebook",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: <月份>"
+    },
+    {
+      "keyword": "leatherbound notebook journal",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: <月份>"
+    },
+    {
+      "keyword": "leather bound notebook",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: <月份>"
+    },
+    {
+      "keyword": "real leather journal",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: 均衡"
+    },
+    {
+      "keyword": "leather journals for women",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: <月份>"
+    },
+    {
+      "keyword": "mens leather journal",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: <月份>"
+    },
+    {
+      "keyword": "leather diary",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: <月份>"
+    },
+    {
+      "keyword": "notebook leather",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: <月份>"
+    },
+    {
+      "keyword": "leather journal for women",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: <月份>"
+    },
+    {
+      "keyword": "soft leather journal",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: <月份>"
+    },
+    {
+      "keyword": "lined leather journal",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: <月份>"
+    },
+    {
+      "keyword": "leather notebooks",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: <月份>"
+    },
+    {
+      "keyword": "genuine leather journal",
+      "weekly_search_volume": "<搜索量>",
+      "weekly_search_rank": "#N",
+      "monthly_search_volume": "<搜索量>",
+      "recommended_cpc_bid": "$XX.XX",
+      "seasonality": "Peak season of search volume: 均衡"
+    }
+  ]
+}

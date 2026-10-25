@@ -6,7 +6,7 @@ description: 当用户想在开发/上新前验证一个定制化产品或产品
 
 ## 运行环境（box）——合并说明
 
-本技能合并了原 `custom-validator`（定制化产品需求验证，**默认模式**，正文即此版）与 `zach-feature-demand-validator`（单一功能特性验证，**功能模式**）。
+本技能合并了原 `custom-validator`（定制化产品需求验证，**默认模式**，正文即此版）与 `feature-demand-validator`（单一功能特性验证，**功能模式**）。
 - 功能模式完整流程：`feature-demand-validator/references/feature_mode_SKILL.md`（对应参考文件为 `*_feature.md`，校验脚本 `validate_deliverables_feature.py`）
 - 脚本：`feature-demand-validator/scripts/`；Python：`python`；参考：`feature-demand-validator/references/`；示例证据包：`feature-demand-validator/examples/review-source-pack/`
 - Sorftime：box 上已接入 Sorftime MCP（`user-sorftime` 命名空间，先 `GetDynamicTools` 看参数再 `CallDynamicTool`）；脚本内调用用 `_shared/sorftime_http.py`（读环境变量 `SORFTIME_KEY`，**绝不打印**）。下文所有 `MCP:工具名` 都指这些 Sorftime 工具。
@@ -44,8 +44,8 @@ description: 当用户想在开发/上新前验证一个定制化产品或产品
 
 ## 上游 / 下游
 
-- **上游**：`custom_product_research`、`zach-product-research`、`zach-competitor-deep-dive`
-- **下游**：`zach-new-product-listing-writer`
+- **上游**：`custom_product_research`、`product-research`、`competitor-deep-dive`
+- **下游**：`new-product-listing-writer`
 
 ---
 

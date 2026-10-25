@@ -9,8 +9,8 @@
 运行示例：
 
 ```bash
-python3 skills/zach-feature-demand-validator/scripts/parse_review_source_pack.py \
-  --pack skills/zach-feature-demand-validator/examples/review-source-pack \
+python3 skills/feature-demand-validator/scripts/parse_review_source_pack.py \
+  --pack skills/feature-demand-validator/examples/review-source-pack \
   --keywords "steam,steamer,steaming" \
   --output /tmp/01_review_信号_原始数据.csv
 ```
@@ -18,8 +18,8 @@ python3 skills/zach-feature-demand-validator/scripts/parse_review_source_pack.py
 Windows:
 
 ```powershell
-py -3 skills/zach-feature-demand-validator/scripts/parse_review_source_pack.py `
-  --pack skills\zach-feature-demand-validator\examples\review-source-pack `
+py -3 skills/feature-demand-validator/scripts/parse_review_source_pack.py `
+  --pack skills\feature-demand-validator\examples\review-source-pack `
   --keywords "steam,steamer,steaming" `
   --output C:\Temp\01_review_信号_原始数据.csv
 ```
