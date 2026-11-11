@@ -33,7 +33,6 @@ CSV_COLUMNS = [
     "数据来源", "来源类型", "来源链接/查询词", "原始文件名", "采集时间",
 ]
 
-
 def process_pinterest_data(data: dict, source_ref: str, raw_file: str,
                            captured_at: str | None = None) -> list[dict]:
     rows: list[dict] = []
@@ -76,7 +75,6 @@ def process_pinterest_data(data: dict, source_ref: str, raw_file: str,
 
     return rows
 
-
 def main() -> int:
     parser = argparse.ArgumentParser(description="Pinterest Trends 数据导出为标准 CSV")
     parser.add_argument("--data", required=True, help="Pinterest 数据 JSON 文件")
@@ -104,7 +102,6 @@ def main() -> int:
 
     print(json.dumps({"csv_path": args.output, "csv_rows": len(rows)}, ensure_ascii=False))
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

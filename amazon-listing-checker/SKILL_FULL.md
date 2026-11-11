@@ -5,18 +5,17 @@ description: 当用户给出单个 ASIN 要做基于证据的 Listing 诊断（�
 
 # Amazon Listing Checker
 
-## 运行环境（box）
+## 运行环境
 
 - 输出目录：`reports/listing-checker/<ASIN>/`（分段 Markdown、清洁版报告、抓取结果；本地 MD 是源文件）
 - 参考：`amazon-listing-checker/docs/USAGE.md`、`amazon-listing-checker/examples/example-prompts.md`、样例报告 `amazon-listing-checker/examples/sample_output/B0XXXXXXX2_complete_report.md`
-- Sorftime：box 上已接入 Sorftime MCP（`user-sorftime` 命名空间，先 `GetDynamicTools` 看参数再 `CallDynamicTool`）；脚本内调用用 `_shared/sorftime_http.py`（读环境变量 `SORFTIME_KEY`，**绝不打印**）。下文所有 `MCP:工具名` 都指这些 Sorftime 工具。
+- Sorftime：脚本用 `_shared/sorftime_http.py`（读环境变量 `SORFTIME_KEY`，**绝不打印**）。只有配置了密钥，或使用者自己接入 Sorftime 时才能调用；下文 `MCP:工具名` 指 Sorftime 工具名，不是本仓库自带的服务。
   - 产品基础信息 `product_detail` / `product_content`；评论 `product_reviews`、`product_customers_say`；竞品关键词 `competitor_product_keywords`、`product_traffic_terms`；关键词 `keyword_detail`
 - 页面现状：也可用 `amazon-listing-health-checker/fetch_amazon_page.py <ASIN>` 抓当前页面
-- **SIF MCP 在 box 上不可用**：广告、流量结构、CTR/CVR 等经营数据一律写「未获取到」，不得写成确定事实（原规则即如此要求）；如用户提供广告报告 CSV，可用 `amazon-ads-diagnostics` 的 CSV 模式补充
+- **如果没有 SIF MCP**：广告、流量结构、CTR/CVR 等经营数据一律写「未获取到」，不得写成确定事实；如用户提供广告报告 CSV，可用 `amazon-ads-diagnostics` 的 CSV 模式补充
 - 不把 token、cookie、Authorization 等写进任何产物
 
 ---
-
 
 ## 这个技能做什么
 
@@ -59,10 +58,10 @@ description: 当用户给出单个 ASIN 要做基于证据的 Listing 诊断（�
 
 ## MCP 前置条件
 
-- box 上 `sorftime` 已接入（user-sorftime）；`sif-mcp` 不可用
-- `sorftime` 用于产品详情、评论、竞品关键词等事实数据
-- `sif-mcp` 用于广告、流量、趋势、结构等经营数据
-- 用 `GetDynamicTools` 确认 user-sorftime 状态正常
+- Sorftime 只在配置了 `SORFTIME_KEY` 或使用者自己接入时可用；没有 SIF 时不要编造 SIF 数据
+- Sorftime 用于产品详情、评论、竞品关键词等事实数据
+- SIF 如果可用，才用于广告、流量、趋势、结构等经营数据
+- 调用前确认密钥或接入是否可用，不要把密钥写进仓库
 - `sorftime` 不可用时，缺失字段必须写 `未获取到`
 - `sif-mcp` 不可用时，不得把广告与经营判断写成确定事实
 - 不要把 token、Authorization header、cookie 等敏感信息写入技能文档、README 或 `OutPut` 产物

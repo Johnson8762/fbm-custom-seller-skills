@@ -1,0 +1,6 @@
+Campaign Name,Ad Group Name,Customer Search Term,Match Type,Impressions,Clicks,Spend,7 Day Total Sales ,7 Day Total Orders (#),Keyword Bid
+Synthetic-Auto,AG1,term fifteen clicks,BROAD,900,15,$6.00,$0.00,0,$0.50
+Synthetic-Auto,AG1,term twenty clicks,BROAD,1500,20,$8.00,$0.00,0,$0.50
+Synthetic-Auto,AG1,term winner,EXACT,800,25,$10.00,$80.00,4,$0.50
+Synthetic-Auto,AG1,term expensive,BROAD,500,12,$40.00,$0.00,0,$3.00
+Synthetic-Auto,AG1,weird stuff,BROAD,100,1,$1.00,$0.00,0,$1.00

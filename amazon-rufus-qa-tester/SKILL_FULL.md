@@ -5,19 +5,18 @@ description: 当用户要测试或评估一个亚马逊 Listing 的 Rufus/COSMO 
 
 # amazon-rufus-qa-tester
 
-## 运行环境（box）
+## 运行环境
 
 - 报告保存：`reports/rufus-qa/[ASIN]_[日期].md`
 - 输入可以是 ASIN 或用户粘贴的 Listing 文本
-- Sorftime：box 上已接入 Sorftime MCP（`user-sorftime` 命名空间，先 `GetDynamicTools` 看参数再 `CallDynamicTool`）；脚本内调用用 `_shared/sorftime_http.py`（读环境变量 `SORFTIME_KEY`，**绝不打印**）。下文所有 `MCP:工具名` 都指这些 Sorftime 工具。
+- Sorftime：脚本用 `_shared/sorftime_http.py`（读环境变量 `SORFTIME_KEY`，**绝不打印**）。只有配置了密钥，或使用者自己接入 Sorftime 时才能调用；下文 `MCP:工具名` 指 Sorftime 工具名，不是本仓库自带的服务。
   - 产品 `product_detail` / `product_content`，评论 `product_reviews` / `product_customers_say`，流量词 `product_traffic_terms`，竞品 `competitor_product_keywords`，关键词 `keyword_detail` / `keyword_extends`
 - 当前页面：`python amazon-listing-health-checker/fetch_amazon_page.py <ASIN>`
-- 真实 Rufus 问答（可选）：box 浏览器已登录亚马逊买家账号，可在商品页打开 Rufus 输入测试问题并截取真实回答，与模拟结果对照；未实测时须注明「模拟」
+- 真实 Rufus 问答（可选）：在使用者已登录的浏览器里打开商品页 Rufus，输入测试问题并截取真实回答，与模拟结果对照；未实测时须注明「模拟」。不要输入密码。
 - 原知识库 PDF/DOCX 未随技能打包，方法论已写在本文件中
 - 相关：`amazon-listing-checker`（证据型诊断）、`amazon-listing-writer`（重写 Listing）
 
 ---
-
 
 ## 1. 技能定位
 

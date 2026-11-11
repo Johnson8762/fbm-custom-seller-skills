@@ -3,22 +3,22 @@ name: etsy-keyword-database
 description: 当用户要构建/更新 Etsy 关键词库、查某个 Etsy 关键词的竞争度（Listing 数、均价）、导入 EverBee 导出的 CSV、计算蓝海指数、把 Etsy 关键词同步到飞书多维表格、或筛选 Etsy 蓝海关键词时使用。
 ---
 
-# Etsy 关键词数据库系统（box 版）
+# Etsy 关键词数据库系统
 
 为 Etsy 店铺（定制/个性化产品）构建可持续的关键词资产：采集 → 合并 → 蓝海评分 → 飞书多维表格 → 蓝海报告。
 
-## 运行环境（box）
+## 运行环境
 
 - 脚本目录：`etsy-keyword-database/`
 - Python：`python`（下文简写 `$PY`）
 - 环境变量（只检查是否存在，**绝不打印值**）：`ETSY_API_KEY`、`ETSY_SHARED_SECRET`（Etsy Open API v3）、`FEISHU_APP_SECRET`（飞书自建应用）
 - 产出目录：`reports/etsy-keyword-db/<日期或项目>/`
-- 飞书：通过 `_shared/feishu_bitable.py` 直接调用飞书 Open API（box 上没有 lark-cli）
+- 飞书：通过 `_shared/feishu_bitable.py` 直接调用飞书 Open API（不依赖 lark-cli）
 - 原 Etsy MCP `search_listings` → `fetch_etsy_data.py`（Etsy v3 `/listings/active`，每个关键词 1 次请求）
 
 ## 输入 / 输出
 
-**输入**：关键词列表（每行一个，模板见 `templates/keywords_example.txt`）；EverBee CSV（可选，用户上传到 box，如 `./uploads/everbee_export.csv`）；已有飞书表格的 app_token/table_id（可选，默认读脚本目录下 `lark_config.json`）
+**输入**：关键词列表（每行一个，模板见 `templates/keywords_example.txt`）；EverBee CSV（可选，使用者提供的本地文件，例如 `./uploads/everbee_export.csv`，不要提交）；已有飞书表格的 app_token/table_id（可选，默认读脚本目录下 `lark_config.json`）
 **输出**：飞书多维表格（关键词数据库）+ 蓝海关键词报告 `keyword_report.txt`
 
 ## 字段设计（--setup 自动创建）
@@ -53,12 +53,12 @@ $PY fetch_etsy_data.py keywords.txt -o reports/etsy-keyword-db/<项目>/etsy_dat
 每个关键词输出：`listing_count`（Listing 总数=竞争度）、`avg_price`（USD，去掉首尾各 10% 的截尾均值，已排除非 USD 报价）、`median_price`、`price_range`、`personalizable_ratio`（可定制 Listing 占比，对定制类目很有用）、`top_listings`（Top 结果标题/价格/收藏数，用于人工复核）。
 
 **方式 B：EverBee CSV 导入**（批量搜索量）
-1. 用户在 EverBee 中搜索关键词 → Export to CSV → 发给我（上传到 box）
+1. 用户在 EverBee 中搜索关键词 → Export to CSV → 交给技能（放在本地目录，不要提交）
 2. 必需列：`Keyword`、`Search Volume`、`Competition`、`Avg Price`（可选）
 ```bash
 $PY import_everbee.py ./uploads/everbee_export.csv -o reports/etsy-keyword-db/<项目>/everbee_data.json
 ```
-（EverBee 是浏览器插件，box 上无法自动导出；如用户没有 CSV，可在已登录 Etsy 的浏览器里打开 EverBee 手动导出，或只做方式 A。）
+（EverBee 是浏览器插件，本仓库不能自动导出；没有 CSV 时，请使用者在自己已登录的浏览器里手动导出，或只做方式 A。）
 
 **方式 C：混合模式（推荐）**：先 EverBee 拿搜索量 → 再 Etsy API 补实时 Listing 数和价格 → 合并计算（两者冲突时以 Etsy API 实时数据为准，EverBee 作参考）。
 

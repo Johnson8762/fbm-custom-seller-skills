@@ -5,9 +5,9 @@ description: 当用户要从核心词根和竞品 ASIN 出发构建亚马逊关�
 
 # 亚马逊关键词库分析器
 
-## 运行环境（box）——数据源替代
+## 运行环境——数据源替代
 
-| 原数据源 | box 替代 |
+| 原数据源 | 本仓库替代 |
 |---|---|
 | ABA 方法 A 词根拓词 | Sorftime `keyword_extends`（含周/月搜索量、周排名、建议 CPC）、`keyword_detail`；也可用 `amazon-aba-keyword-monitor/` 的 ABA 抓取脚本 |
 | ABA 方法 B ASIN 反查 / SIF 反查（相关性 40+） | Sorftime `product_traffic_terms`、`competitor_product_keywords`（无 SIF「相关性得分」，用曝光位置/自然排名近似，须注明） |
@@ -19,11 +19,10 @@ description: 当用户要从核心词根和竞品 ASIN 出发构建亚马逊关�
 - 词库构建：`python amazon-keyword-analyzer/build_keyword_library.py <extends.json> <ac.json> [更多 JSON/CSV] --exclude-roots "free,cheap,..." -o reports/keywords/<产品>/关键词库.xlsx`
   - 自动去重、词根拆分、匹配方式与出价区间（CPC±20%）建议、广告分组（高流量 ≥10k / 中流量 ≥1k / 长尾）；相关性默认「待判断」，**由 AI 按下文分类标准逐词判定**后写回
 - 输出目录：`reports/keywords/<产品>/`（Excel + 分类报告 + 投放策略 + 文案建议）
-- Sorftime：box 上已接入 Sorftime MCP（`user-sorftime` 命名空间，先 `GetDynamicTools` 看参数再 `CallDynamicTool`）；脚本内调用用 `_shared/sorftime_http.py`（读环境变量 `SORFTIME_KEY`，**绝不打印**）。下文所有 `MCP:工具名` 都指这些 Sorftime 工具。
+- Sorftime：脚本用 `_shared/sorftime_http.py`（读环境变量 `SORFTIME_KEY`，**绝不打印**）。只有配置了密钥，或使用者自己接入 Sorftime 时才能调用；下文 `MCP:工具名` 指 Sorftime 工具名，不是本仓库自带的服务。
 - 定制产品注意：personalized / custom / engraved / name 等定制修饰词通常为高相关核心属性词
 
 ---
-
 
 ## 核心能力
 

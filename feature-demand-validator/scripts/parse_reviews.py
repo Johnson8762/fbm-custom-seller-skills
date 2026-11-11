@@ -91,7 +91,6 @@ CSV_COLUMNS_CUSTOM = [
     "数据来源", "来源类型", "来源链接/查询词", "原始文件名", "采集时间",
 ]
 
-
 # ── 核心函数 ─────────────────────────────────────────────────────────
 
 def load_reviews(path: str) -> list[dict]:
@@ -111,10 +110,8 @@ def load_reviews(path: str) -> list[dict]:
 
     return data
 
-
 def default_captured_at() -> str:
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
 
 def classify_sentiment(rating: float) -> str:
     if rating >= 4:
@@ -123,11 +120,9 @@ def classify_sentiment(rating: float) -> str:
         return "中"
     return "负"
 
-
 def matches_any(text: str, keywords: list[str]) -> bool:
     text_lower = text.lower()
     return any(kw.lower() in text_lower for kw in keywords)
-
 
 def classify_subdimension(text: str, subdimensions: dict[str, list[str]]) -> list[str]:
     """返回一条 Review 命中的所有子维度名称。"""
@@ -136,7 +131,6 @@ def classify_subdimension(text: str, subdimensions: dict[str, list[str]]) -> lis
         if matches_any(text, keywords):
             matched.append(dim_name)
     return matched if matched else ["无关"]
-
 
 # ── Feature 模式处理（向后兼容）──────────────────────────────────────
 
@@ -196,7 +190,6 @@ def process_reviews_feature(
         })
 
     return rows, stats
-
 
 # ── Custom 模式处理 ──────────────────────────────────────────────────
 
@@ -261,12 +254,10 @@ def process_reviews_custom(
 
     return rows, stats
 
-
 def load_custom_keywords(path: str) -> dict[str, list[str]]:
     """加载自定义子维度关键词配置。"""
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
-
 
 def write_csv(rows: list[dict], output_path: str, columns: list[str] | None = None) -> None:
     columns = columns or CSV_COLUMNS_FEATURE
@@ -280,10 +271,8 @@ def write_csv(rows: list[dict], output_path: str, columns: list[str] | None = No
         writer.writeheader()
         writer.writerows(rows)
 
-
 # 兼容旧接口（parse_review_source_pack.py 仍按 feature 模式调用）
 process_reviews = process_reviews_feature
-
 
 # ── CLI ──────────────────────────────────────────────────────────────
 
@@ -350,7 +339,6 @@ def main() -> int:
     stats["csv_rows"] = len(rows)
     print(json.dumps(stats, ensure_ascii=False))
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

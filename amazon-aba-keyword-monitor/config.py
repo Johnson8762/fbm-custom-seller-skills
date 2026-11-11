@@ -1,6 +1,6 @@
-"""配置 - 亚马逊 ABA 爆品关键词监测系统（box 移植版）
+"""配置 - 亚马逊 ABA 爆品关键词监测系统
 
-改动（相对 Mac 原版）：
+多类目版相对早期单机脚本的差别：
   * 多类目合并：类目由 --category 参数 / 环境变量 ABA_CATEGORY 选择，
     每个类目一个目录 data/<slug>/（category_config.json / 词典 / 排除规则 / history.db / .exchange/）
   * Sorftime key 只从环境变量 SORFTIME_KEY（兼容 SORFTIME_API_KEY）读取，绝不打印
@@ -50,14 +50,12 @@ SORFTIME_MAX_TIER2 = int(os.environ["ABA_SORFTIME_MAX_TIER2"]) if os.environ.get
 VERIFY_SSL = os.environ.get("VERIFY_SSL", "true").lower() == "true"
 SORFTIME_API_KEY = os.environ.get("SORFTIME_KEY") or os.environ.get("SORFTIME_API_KEY", "")
 
-
 # ─── 类目选择 ───
 def list_categories():
     if not os.path.isdir(DATA_ROOT):
         return []
     return sorted(d for d in os.listdir(DATA_ROOT)
                   if os.path.isfile(os.path.join(DATA_ROOT, d, "category_config.json")))
-
 
 def get_category_slug():
     slug = os.environ.get("ABA_CATEGORY", "").strip()
@@ -66,14 +64,11 @@ def get_category_slug():
     cats = list_categories()
     return cats[0] if len(cats) == 1 else ""
 
-
 def get_data_dir():
     return os.path.join(DATA_ROOT, get_category_slug() or "default")
 
-
 def _cfg_path():
     return os.path.join(get_data_dir(), "category_config.json")
-
 
 def load_category_config() -> dict:
     p = _cfg_path()
@@ -82,43 +77,33 @@ def load_category_config() -> dict:
     with open(p, "r", encoding="utf-8") as f:
         return json.load(f)
 
-
 def save_category_config(cfg: dict):
     os.makedirs(get_data_dir(), exist_ok=True)
     with open(_cfg_path(), "w", encoding="utf-8") as f:
         json.dump(cfg, f, ensure_ascii=False, indent=2)
 
-
 def get_category_name() -> str:
     return load_category_config().get("category_name", "未配置")
-
 
 def get_category_name_en() -> str:
     return load_category_config().get("category_name_en", get_category_slug() or "unknown")
 
-
 def get_dict_path():
     return os.path.join(get_data_dir(), "category_dict.json")
-
 
 def get_exclusion_path():
     return os.path.join(get_data_dir(), "exclusion_rules.json")
 
-
 def get_db_path():
     return os.path.join(get_data_dir(), "history.db")
-
 
 def get_exchange_dir():
     return os.path.join(get_data_dir(), ".exchange")
 
-
 def get_report_dir():
     return os.path.join(REPORT_ROOT, get_category_slug() or "default")
 
-
 TEMPLATE_DIR = os.path.join(SKILL_DIR, "templates")
-
 
 # 兼容旧代码中的 config.EXCHANGE_DIR / config.REPORT_DIR 引用
 def __getattr__(name):
@@ -128,14 +113,12 @@ def __getattr__(name):
         return get_report_dir()
     raise AttributeError(name)
 
-
 # ─── 启动检查 ───
 def check_sorftime_ready() -> bool:
     if not SORFTIME_API_KEY:
-        print("❌ 环境变量 SORFTIME_KEY 未设置（box 上应已注入；不要把 key 写进文件）")
+        print("❌ 环境变量 SORFTIME_KEY 未设置（请在环境变量中设置，不要把 key 写进文件）")
         return False
     return True
-
 
 def check_category_ready() -> bool:
     if not get_category_slug():
@@ -147,7 +130,6 @@ def check_category_ready() -> bool:
         return False
     return True
 
-
 def get_bitable_config() -> dict:
     cfg = load_category_config()
     return {
@@ -156,7 +138,6 @@ def get_bitable_config() -> dict:
         "table_ids": cfg.get("table_ids", {}),
         "dashboard_id": cfg.get("dashboard_id", ""),
     }
-
 
 def save_bitable_config(bitable_token, bitable_url, table_ids, dashboard_id=""):
     cfg = load_category_config()

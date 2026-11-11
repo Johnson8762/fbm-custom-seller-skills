@@ -22,18 +22,14 @@ RETRY_ERRS = {1254290, 1254291, 1254607, 1255040, 1254036}
 # Feishu field type codes
 TEXT, NUMBER, SELECT, MULTI_SELECT, DATETIME, URL = 1, 2, 3, 4, 5, 15
 
-
 class FeishuError(Exception):
     pass
-
 
 def _default_app_id():
     return os.environ.get("FEISHU_APP_ID", "")
 
-
 def owner_open_id():
     return os.environ.get("FEISHU_OWNER_OPEN_ID", "")
-
 
 class Client:
     def __init__(self, app_token=None, dry_run=False, log=print):
@@ -205,7 +201,6 @@ class Client:
         for i in range(0, len(recs), 500):
             self.call("POST", f"/bitable/v1/apps/{self.app}/tables/{tid}/records/batch_update",
                       {"records": recs[i:i + 500]})
-
 
 def ts_ms(dt=None):
     """Feishu datetime fields want epoch milliseconds."""

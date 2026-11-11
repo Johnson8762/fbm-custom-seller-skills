@@ -20,7 +20,6 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from browser_utils import fetch_page, fetch_page_with_location, get_site_config, check_captcha
 from bs4 import BeautifulSoup
 
-
 def extract_product_data(html: str, asin: str, site_code: str, domain: str) -> dict:
     """从 HTML 中提取商品页面所有检查项数据"""
 
@@ -278,7 +277,6 @@ def extract_product_data(html: str, asin: str, site_code: str, domain: str) -> d
 
     return result
 
-
 def main():
     parser = argparse.ArgumentParser(description="抓取亚马逊商品页面（定制版 — 含 Customize Now 检测 + 地址设置）")
     parser.add_argument("asin", help="商品 ASIN")
@@ -296,7 +294,6 @@ def main():
     data["zip_code"] = zip_code
 
     print(json.dumps(data, ensure_ascii=False, indent=2))
-
 
 if __name__ == "__main__":
     main()

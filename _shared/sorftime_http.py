@@ -1,4 +1,4 @@
-"""Minimal Sorftime MCP-over-HTTP client for box scripts.
+"""Minimal Sorftime MCP-over-HTTP client.
 
 Reads the key from env SORFTIME_KEY (fallback SORFTIME_API_KEY). Never prints the key.
 Usage:

@@ -3,17 +3,16 @@ name: feature-demand-validator
 description: 当用户想在开发/上新前验证一个定制化产品或产品新功能/新特性是否有真实市场需求（Review、关键词、社区、Pinterest、Etsy、TikTok、1688 多维信号，输出判定报告+标准 CSV）时使用；默认定制模式，验证单个功能特性时切换功能模式。
 ---
 
-
-## 运行环境（box）——合并说明
+## 运行环境——合并说明
 
 本技能合并了原 `custom-validator`（定制化产品需求验证，**默认模式**，正文即此版）与 `feature-demand-validator`（单一功能特性验证，**功能模式**）。
 - 功能模式完整流程：`feature-demand-validator/references/feature_mode_SKILL.md`（对应参考文件为 `*_feature.md`，校验脚本 `validate_deliverables_feature.py`）
 - 脚本：`feature-demand-validator/scripts/`；Python：`python`；参考：`feature-demand-validator/references/`；示例证据包：`feature-demand-validator/examples/review-source-pack/`
-- Sorftime：box 上已接入 Sorftime MCP（`user-sorftime` 命名空间，先 `GetDynamicTools` 看参数再 `CallDynamicTool`）；脚本内调用用 `_shared/sorftime_http.py`（读环境变量 `SORFTIME_KEY`，**绝不打印**）。下文所有 `MCP:工具名` 都指这些 Sorftime 工具。
-  - 路线 A（Sorftime 完整版）在 box 上**可用**：`product_reviews`、`keyword_detail` / `keyword_trend` / `keyword_extends`、`tiktok_*`、`ali1688_similar_product`
+- Sorftime：脚本用 `_shared/sorftime_http.py`（读环境变量 `SORFTIME_KEY`，**绝不打印**）。只有配置了密钥，或使用者自己接入 Sorftime 时才能调用；下文 `MCP:工具名` 指 Sorftime 工具名，不是本仓库自带的服务。
+  - 路线 A（Sorftime 完整版）在已接入 Sorftime 时**可用**：`product_reviews`、`keyword_detail` / `keyword_trend` / `keyword_extends`、`tiktok_*`、`ali1688_similar_product`
   - Sorftime 原始返回 → 标准行：`python feature-demand-validator/scripts/sorftime_to_rows.py --type detail|trend|extends --raw raw.json --keyword "<词>" -o rows.json`，再交给 `generate_keyword_csv.py`（AI 只补判断列）
 - 社区：WebSearch（Reddit/Quora）或 Sorftime `reddit_post_search` / `quora_question_search`
-- Pinterest：WebSearch + WebFetch；被拦时用 box 浏览器
+- Pinterest：WebSearch + WebFetch；被拦时请使用者在自己的浏览器里打开
 - Etsy：`python etsy-keyword-database/fetch_etsy_data.py`（Etsy v3 API，环境变量 `ETSY_API_KEY`/`ETSY_SHARED_SECRET`，绝不打印）取在售数量与价格带；Etsy API **没有搜索量**
 - 输出目录：`reports/feature-validation/<产品或功能>_<日期>/`
 - 原 `WINDOWS_USAGE.md` 不适用，已省略

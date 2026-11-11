@@ -1,4 +1,4 @@
-<!-- 通用模式（原 product-research），已改为 box 路径；Sorftime 工具名去掉 mcp_sorftime_ 前缀，走 user-sorftime MCP -->
+<!-- 通用模式（原 product-research）。路径相对本仓库。Sorftime 用环境变量 SORFTIME_KEY 或使用者自己的接入，不要把密钥写进仓库。 -->
 ---
 name: product-research
 description: 基于Sorftime MCP的选品分析，发现高潜力市场机会、多维度属性标注与交叉分析、验证竞争格局、测算投入产出、输出Go/No-Go决策与选品报告。新品上架工作流第一步

@@ -5,21 +5,20 @@ description: 当用户要对一个定制化/个性化品类（或任意亚马逊
 
 # 选品分析器（Custom Product Research - 双平台 FBM 定制版）
 
-## 运行环境（box）——合并说明
+## 运行环境——合并说明
 
 本技能合并了原 `custom_product_research`（定制化品类调研，**默认模式**，正文即此版）与 `product-research`（通用品类调研，**通用模式**）。
 - 通用模式完整流程：`custom-product-research/references/generic_mode_SKILL.md`（脚本 `*_generic.py`，模板 `assets/generic/`、`agents/generic/`、`evals/generic/`，Schema `references/payload_schema_v2.md`、`references/analysis_patterns.md`）
 - 定制模式文件：`custom-product-research/scripts/render_deliverables.py`、`parse_top100_dimensions.py`、`cross_analysis.py`；`custom-product-research/references/payload_schema_v2_custom.md`、`analysis_patterns_custom.md`、`html_report_spec.md`；`custom-product-research/agents/`；`custom-product-research/assets/`
 - 渲染：`python custom-product-research/scripts/render_deliverables.py all --input <unified_payload.json>`（子命令 `generate` / `validate` / `all`；`--root` 默认 `reports/product-research`，产物落在 `reports/product-research/工作成果/brands/<品牌>/市场调研/<品类>/<版本>/`）
 - 冒烟测试：`python custom-product-research/scripts/render_deliverables.py all --input custom-product-research/evals/files/sample_payload_minimal.json --root /tmp/pr_test`
-- Sorftime：box 上已接入 Sorftime MCP（`user-sorftime` 命名空间，先 `GetDynamicTools` 看参数再 `CallDynamicTool`）；脚本内调用用 `_shared/sorftime_http.py`（读环境变量 `SORFTIME_KEY`，**绝不打印**）。下文所有 `MCP:工具名` 都指这些 Sorftime 工具。
+- Sorftime：脚本用 `_shared/sorftime_http.py`（读环境变量 `SORFTIME_KEY`，**绝不打印**）。只有配置了密钥，或使用者自己接入 Sorftime 时才能调用；下文 `MCP:工具名` 指 Sorftime 工具名，不是本仓库自带的服务。
   - 常用：`category_report` / `category_products` / `category_trend`、`product_detail` / `product_reviews`、`keyword_detail` / `keyword_extends` / `keyword_search_results`、`ali1688_similar_product`
-- Etsy 对标：优先 `python etsy-keyword-database/fetch_etsy_data.py`（API，含价格/收藏/在售量，仅美元，无搜索量），需要页面结构（Bestseller 标、个性化选项）时用 box 浏览器（已登录 Etsy）
-- 原文的 `write_to_file` / `run_command` = box 上的文件写入 / Shell；payload 组装脚本写到 `./tmp/assemble_payload.py`
-- 用户的店铺背景：亚马逊 1 店 + Etsy 1 店，定制产品，FBM 发货——定价模型须包含 FBM 运费与定制工时
+- Etsy 对标：优先 `python etsy-keyword-database/fetch_etsy_data.py`（API，含价格/收藏/在售量，仅美元，无搜索量），需要页面结构（Bestseller 标、个性化选项）时，请使用者在自己已登录的浏览器里查看
+- 中间文件写到本地工作目录，用 Shell 运行脚本；payload 组装脚本写到 `./tmp/assemble_payload.py`（临时文件，不要提交）
+- 定价按使用者实际渠道填写。示例场景是 FBM 定制：模型须包含 FBM 运费与定制工时。不要假设店铺数量。
 
 ---
-
 
 ## 📌 定位
 
@@ -81,7 +80,7 @@ description: 当用户要对一个定制化/个性化品类（或任意亚马逊
 | | `product_search` | 辅助筛选特定条件（如 FBM）的竞品 | 📋 按需 |
 | **Amazon 详情与 VOC** | `product_detail` | 提取竞品提供哪些 Customization 选项 | ⛔ 必调 |
 | | `product_reviews` | 收集竞品差评，挖掘定制体验痛点 | ⛔ 必调 |
-| **Etsy 市场对标** | box 浏览器 / Etsy API (或直接页面调用) | 获取对应目标词下的产品列表页结构（价格带、Bestseller比例）与代表竞品详情（定制拉下框选项、加工交期） | ⛔ 必调 |
+| **Etsy 市场对标** | 使用者的浏览器 / Etsy API | 获取对应目标词下的产品列表页结构（价格带、Bestseller比例）与代表竞品详情（定制拉下框选项、加工交期） | ⛔ 必调 |
 | **供应链参考** | `ali1688_similar_product` | 提取可用于定制的"白板/底模"裸产品采购价基准 | 📋 按需 |
 
 *(注：Etsy 数据提取为轻量级探索，获取首页前列产品价格中位数与最高位，以及几个 Star Seller 对应的产品定制结构即可，不需要抓取几百条深层数据)*

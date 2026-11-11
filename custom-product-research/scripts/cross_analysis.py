@@ -19,10 +19,8 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
-
 def load_json(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
-
 
 def cross_table(products: list[dict], dim1: str, dim2: str) -> dict:
     matrix = defaultdict(lambda: defaultdict(lambda: {"count": 0, "sales": 0, "revenue": 0.0}))
@@ -33,7 +31,6 @@ def cross_table(products: list[dict], dim1: str, dim2: str) -> dict:
         matrix[v1][v2]["sales"] += int(product.get("月销量", 0) or 0)
         matrix[v1][v2]["revenue"] += float(product.get("月销额", 0) or 0)
     return {k: dict(v) for k, v in matrix.items()}
-
 
 def find_gaps(matrix: dict, scarcity_threshold: int = 2) -> list[dict]:
     gaps = []
@@ -50,7 +47,6 @@ def find_gaps(matrix: dict, scarcity_threshold: int = 2) -> list[dict]:
                     }
                 )
     return sorted(gaps, key=lambda item: (item["产品数"], -item["月销量"]))
-
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="生成通用交叉分析")
@@ -75,7 +71,6 @@ def main() -> int:
     Path(args.output).write_text(json.dumps(analyses, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"analyses={len(analyses)}")
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

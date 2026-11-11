@@ -14,7 +14,6 @@ import config
 
 logger = logging.getLogger(__name__)
 
-
 async def _sorftime_call(client, tool, arguments):
     try:
         resp = await client.post(
@@ -39,7 +38,6 @@ async def _sorftime_call(client, tool, arguments):
         logger.warning(f"Sorftime {tool} error: {type(e).__name__}")
         return None
 
-
 def _payload(raw):
     """MCP result -> parsed JSON (dict/list) or None."""
     if raw is None:
@@ -63,20 +61,17 @@ def _payload(raw):
                 return None
     return None
 
-
 def _data(raw):
     p = _payload(raw)
     if isinstance(p, dict) and "data" in p:
         return p["data"]
     return p
 
-
 def _num(v):
     try:
         return float(str(v).replace(",", ""))
     except (TypeError, ValueError):
         return None
-
 
 def _pairs(flat):
     out = []
@@ -86,11 +81,9 @@ def _pairs(flat):
         out.append((str(flat[i]), flat[i + 1]))
     return out
 
-
 def _month(p):
     p = str(p)
     return f"{p[:4]}-{p[4:6]}" if len(p) >= 6 else p
-
 
 def _cpc_series(flat):
     """支持 [m, v, m, v] (USD) 与 [m, cpc, min, max, ...] (cent) 两种格式。"""
@@ -109,7 +102,6 @@ def _cpc_series(flat):
             v = v / 100.0
         out[_month(flat[i])] = round(v, 2)
     return out
-
 
 def parse_trend(raw):
     """keyword_trend -> [{month, searchVolume, searchRank, cpc}] 按月升序。"""
@@ -131,7 +123,6 @@ def parse_trend(raw):
         md[m]["month"] = m
     return sorted(md.values(), key=lambda x: x["month"])
 
-
 def parse_detail(raw):
     d = _data(raw)
     if isinstance(d, list):
@@ -142,7 +133,6 @@ def parse_detail(raw):
             "monthly_search_volume", "cpc", "cpc_range", "search_conversion_rate",
             "peak_season", "top3_asin", "top3_brand", "top3_category", "update"]
     return {k: d.get(k) for k in keep if k in d}
-
 
 def parse_extends(raw, limit=10):
     """keyword_extends -> list，键保持中文（与 bitable 写入映射一致）。"""
@@ -166,10 +156,8 @@ def parse_extends(raw, limit=10):
     out.sort(key=lambda x: -(_num(x["月搜索量"]) or 0))
     return out[:limit]
 
-
 def _args(kw):
     return {"keyword": kw, "keyword_support_site": config.SORFTIME_SITE}
-
 
 async def query_full(client, kw, sem):
     async with sem:
@@ -184,12 +172,10 @@ async def query_full(client, kw, sem):
     r["extends"] = parse_extends(e)
     return kw, r
 
-
 async def query_trend(client, kw, sem):
     async with sem:
         t = await _sorftime_call(client, "keyword_trend", _args(kw))
     return kw, ({"trend": parse_trend(t)} if t else {})
-
 
 async def batch_query(tier1_kws, tier2_kws):
     sem = asyncio.Semaphore(config.SORFTIME_CONCURRENCY)
@@ -203,7 +189,6 @@ async def batch_query(tier1_kws, tier2_kws):
                 results[kw] = data
                 logger.info(f"  ok {kw}")
     return results
-
 
 def query_sorftime_batch(tier1_kws, tier2_kws):
     if config.SORFTIME_MAX_TIER1 is not None:

@@ -11,7 +11,6 @@ from analyzer import TrendData
 
 logger = logging.getLogger(__name__)
 
-
 def generate_report(results, total_scraped, total_supplement, new_dict_words,
                     analysis=None, excluded_keywords=None, sorftime_stats=None):
     os.makedirs(config.REPORT_DIR, exist_ok=True)
@@ -64,7 +63,6 @@ def generate_report(results, total_scraped, total_supplement, new_dict_words,
         f.write(html)
     logger.info(f"报告已生成: {filepath}")
     return filepath
-
 
 def _enrich(td, keyword_analysis=None):
     d = asdict(td)

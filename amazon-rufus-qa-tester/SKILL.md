@@ -9,3 +9,4 @@ description: >-
 1. 先用 Read 完整读取 `amazon-rufus-qa-tester/SKILL_FULL.md`（完整评分卡、步骤、输出模板）。
 2. 严格按其中步骤执行；相关文件在 `amazon-rufus-qa-tester/`。
 3. 需要真实 Rufus 回答时，用已登录买家账号的电脑浏览器测试。
+

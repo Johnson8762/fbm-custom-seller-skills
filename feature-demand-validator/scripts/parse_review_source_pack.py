@@ -46,14 +46,12 @@ CSV_ALIASES = {
     "date": ["date", "review_date", "评论日期", "posted_at"],
 }
 
-
 def load_manifest(pack_dir: Path) -> dict:
     manifest_path = pack_dir / "source_manifest.json"
     with manifest_path.open("r", encoding="utf-8") as handle:
         manifest = json.load(handle)
     manifest["__path"] = str(manifest_path)
     return manifest
-
 
 def pick_raw_files(pack_dir: Path, manifest: dict) -> list[Path]:
     raw_dir = pack_dir / "raw"
@@ -62,10 +60,8 @@ def pick_raw_files(pack_dir: Path, manifest: dict) -> list[Path]:
         return [raw_dir / name for name in listed]
     return sorted(path for path in raw_dir.iterdir() if path.is_file())
 
-
 def normalize_header(name: str) -> str:
     return re.sub(r"[^a-z0-9\u4e00-\u9fff]+", "", name.lower())
-
 
 def read_csv_reviews(path: Path) -> list[dict]:
     with path.open("r", encoding="utf-8-sig", newline="") as handle:
@@ -99,12 +95,10 @@ def read_csv_reviews(path: Path) -> list[dict]:
             )
     return reviews
 
-
 def coerce_rating(value: str | float | int) -> float:
     text = str(value).strip()
     match = re.search(r"([0-5](?:\.\d)?)", text)
     return float(match.group(1)) if match else 0.0
-
 
 def read_text_reviews(path: Path) -> list[dict]:
     text = path.read_text(encoding="utf-8")
@@ -139,7 +133,6 @@ def read_text_reviews(path: Path) -> list[dict]:
         )
     return reviews
 
-
 def extract_prefixed_value(block: str, prefixes: list[str]) -> str:
     for line in block.splitlines():
         stripped = line.strip()
@@ -147,7 +140,6 @@ def extract_prefixed_value(block: str, prefixes: list[str]) -> str:
             if stripped.lower().startswith(prefix.lower()):
                 return stripped[len(prefix):].strip()
     return ""
-
 
 def read_html_reviews(path: Path) -> list[dict]:
     source = path.read_text(encoding="utf-8")
@@ -177,7 +169,6 @@ def read_html_reviews(path: Path) -> list[dict]:
             )
     return reviews
 
-
 def extract_first(text: str, patterns: list[str]) -> str:
     for pattern in patterns:
         match = re.search(pattern, text, re.IGNORECASE)
@@ -185,11 +176,9 @@ def extract_first(text: str, patterns: list[str]) -> str:
             return match.group(1)
     return ""
 
-
 def clean_html(text: str) -> str:
     stripped = re.sub(r"<[^>]+>", " ", text)
     return " ".join(html.unescape(stripped).split())
-
 
 def load_reviews_from_file(path: Path) -> list[dict]:
     suffix = path.suffix.lower()
@@ -200,7 +189,6 @@ def load_reviews_from_file(path: Path) -> list[dict]:
     if suffix in {".html", ".htm"}:
         return read_html_reviews(path)
     raise ValueError(f"不支持的原始文件格式: {path.name}")
-
 
 def attach_metadata(reviews: list[dict], manifest: dict, raw_file: Path) -> list[dict]:
     source_ref = manifest.get("source_url") or manifest.get("source_query", "")
@@ -217,7 +205,6 @@ def attach_metadata(reviews: list[dict], manifest: dict, raw_file: Path) -> list
         }
         for review in reviews
     ]
-
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="解析 review_source_pack 并导出标准 Review CSV")
@@ -264,7 +251,6 @@ def main() -> int:
     stats["raw_files"] = [file.name for file in raw_files]
     print(json.dumps(stats, ensure_ascii=False))
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

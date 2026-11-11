@@ -5,18 +5,17 @@ description: 当用户给出 ASIN 要做 Listing 健康检查/上架验收/巡�
 
 # 定制化产品 Listing 健康检查器 — 完整方法论
 
-## 运行环境（box）
+## 运行环境
 
 - 脚本目录：`amazon-listing-health-checker/`（`browser_utils.py` / `fetch_amazon_page.py` / `fetch_amazon_search.py`）
 - Python：`python`
 - 抓取方式：curl（已加 `--compressed`，否则亚马逊返回 gzip 乱码）+ BeautifulSoup；邮编切换已修复
 - 报告目录：`reports/brands/{品牌名或ASIN}/listing-health-check/`
-- 被验证码拦截（`page_status=captcha`）时：改用 box 浏览器（已登录亚马逊买家账号）打开页面人工读取，不要猜
+- 被验证码拦截（`page_status=captcha`）时：请使用者在自己已登录的浏览器里打开页面人工读取，不要猜，也不要输入密码
 - 已知小问题：`fetch_amazon_search.py` 能正确找到 ASIN 排名，但搜索结果里的**标题字段常为空**；判断可见性只看位置/是否出现即可
-- 实测（2026-10）：B0XXXXXXX2 页面抓取成功（标题、$19.95、BSR、4.1 星/17 评、有货）；搜索 "custom leather journal" 自然位第 38 名
+- 不要把某一次抓取的价格、星级、评论数或排名写进技能
 
 ---
-
 
 ## 1. 技能定位
 

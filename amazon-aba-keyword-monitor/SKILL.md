@@ -5,5 +5,7 @@ description: 当用户要做亚马逊 ABA 热搜词/爆品关键词监测（每�
 # 亚马逊 ABA 关键词监测
 
 1. 先用 Read 完整读取 `amazon-aba-keyword-monitor/SKILL_FULL.md`（完整方法论、脚本用法、判断标准、输出模板）。
-2. 严格按其中步骤执行；脚本和参考数据都在 `amazon-aba-keyword-monitor/`，Python 用 `python`。
+2. 严格按其中步骤执行；脚本和参考数据都在 `amazon-aba-keyword-monitor/`，Python 用 `python`（共享 venv）。
 3. 写飞书多维表前默认 dry-run，确认目标表后才 `--live`；不得删除用户的表或记录。
+4. 报表需含「首页同款数」「竞争度」两列，预算建议往竞争小的长尾词倾斜（2026-11-03 修订，见 SKILL_FULL 末尾；脚本列尚未恢复，需手工补列）。
+

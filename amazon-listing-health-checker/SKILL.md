@@ -7,5 +7,6 @@ description: >-
 # 亚马逊 Listing 健康检查
 
 1. 先用 Read 完整读取 `amazon-listing-health-checker/SKILL_FULL.md`（完整检查项、脚本用法、输出模板）。
-2. 严格按其中步骤执行；脚本在 `amazon-listing-health-checker/`，Python 用 `python`。
+2. 严格按其中步骤执行；脚本在 `amazon-listing-health-checker/`，Python 用 `python`（共享 venv）。
 3. 遇到亚马逊验证码时改用浏览器兜底。
+

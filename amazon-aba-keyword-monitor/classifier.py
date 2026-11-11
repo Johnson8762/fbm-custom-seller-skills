@@ -18,7 +18,6 @@ import config
 
 logger = logging.getLogger(__name__)
 
-
 class CategoryClassifier:
     """通用类目关键词分类器"""
 

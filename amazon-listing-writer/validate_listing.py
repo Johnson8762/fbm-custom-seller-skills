@@ -8,7 +8,8 @@ Listing-Skill 合规校验脚本
 
 检查项:
     1. 违禁词检测 (促销词、医疗声明、农药声明等)
-    2. 标题字符数限制 (200/125)
+    2. 标题字符数限制 (75，亚马逊 2026-07-27 新规；重建版 2026-11-10)
+    2b. 商品亮点 Item Highlights 字符数限制 (125；找不到亮点段只警告)
     3. Search Terms 字节数限制 (249)
     4. Emoji 检测
     5. 同一单词重复次数检测
@@ -19,7 +20,6 @@ import argparse
 import re
 import sys
 from pathlib import Path
-
 
 # ============================================================
 # 违禁词库
@@ -93,7 +93,6 @@ EMOJI_PATTERN = re.compile(
     flags=re.UNICODE,
 )
 
-
 # ============================================================
 # 解析 Listing 文件
 # ============================================================
@@ -104,7 +103,6 @@ def extract_section(content: str, heading: str) -> str:
     pattern = rf"^#+[ \t]*[^\n]*{re.escape(heading)}[^\n]*\n(.*?)(?=\n#+\s|\Z)"
     match = re.search(pattern, content, re.DOTALL | re.IGNORECASE | re.MULTILINE)
     return match.group(1).strip() if match else ""
-
 
 def extract_title(content: str) -> str:
     """Try to extract the title section."""
@@ -119,6 +117,21 @@ def extract_title(content: str) -> str:
                 return clean
     return ""
 
+def extract_highlights(content: str) -> str:
+    """[重建 2026-11-10] 提取「商品亮点 / Item Highlights」段的第一行正文。"""
+    section = (extract_section(content, "Item Highlights") or extract_section(content, "商品亮点")
+               or extract_section(content, "Highlights") or extract_section(content, "亮点"))
+    for line in section.split('\n'):
+        line = line.strip()
+        if line and not line.startswith('#') and not line.startswith('|') and not line.startswith('```'):
+            return re.sub(r'[`*]', '', line).lstrip('- ').strip()
+    return ""
+
+def check_highlights_length(hl: str, limit: int = 125) -> list:
+    """[重建 2026-11-10] 商品亮点 ≤125 字符。"""
+    if len(hl) > limit:
+        return [{"category": "商品亮点长度", "term": f"{len(hl)} 字符 (上限 {limit})", "context": hl[:80] + "..."}]
+    return []
 
 def extract_search_terms(content: str) -> str:
     """Try to extract Search Terms section."""
@@ -130,7 +143,6 @@ def extract_search_terms(content: str) -> str:
             if len(clean) > 10:
                 return clean
     return ""
-
 
 # ============================================================
 # 检查函数
@@ -153,10 +165,9 @@ def check_forbidden_terms(text: str, term_list: list, category: str) -> list:
             })
     return violations
 
-
 def check_title_length(title: str, is_apparel: bool = False) -> list:
-    """Check title character count."""
-    limit = 125 if is_apparel else 200
+    """Check title character count. 2026-07-27 起所有类目标题上限 75 字符（重建版；--apparel 仅为兼容保留）。"""
+    limit = 75
     violations = []
     if len(title) > limit:
         violations.append({
@@ -165,7 +176,6 @@ def check_title_length(title: str, is_apparel: bool = False) -> list:
             "context": title[:80] + "...",
         })
     return violations
-
 
 def check_search_terms_bytes(st: str) -> list:
     """Check Search Terms byte count."""
@@ -179,7 +189,6 @@ def check_search_terms_bytes(st: str) -> list:
         })
     return violations
 
-
 def check_emoji(text: str) -> list:
     """Check for emoji in text."""
     violations = []
@@ -192,7 +201,6 @@ def check_emoji(text: str) -> list:
         })
     return violations
 
-
 def check_forbidden_chars_in_title(title: str) -> list:
     """Check for forbidden special characters in title."""
     violations = []
@@ -204,7 +212,6 @@ def check_forbidden_chars_in_title(title: str) -> list:
                 "context": f"标题中发现禁用字符: {char}",
             })
     return violations
-
 
 def check_word_repetition(title: str, max_repeat: int = 2) -> list:
     """Check for word repetition in title."""
@@ -229,7 +236,6 @@ def check_word_repetition(title: str, max_repeat: int = 2) -> list:
             })
     return violations
 
-
 # ============================================================
 # 主检查流程
 # ============================================================
@@ -243,6 +249,8 @@ def validate_listing(filepath: str, is_apparel: bool = False) -> dict:
     content = path.read_text(encoding='utf-8')
     title = extract_title(content)
     search_terms = extract_search_terms(content)
+    highlights = extract_highlights(content)
+    warnings = []
 
     all_violations = []
 
@@ -266,6 +274,12 @@ def validate_listing(filepath: str, is_apparel: bool = False) -> dict:
             "context": "无法从文件中解析出标题部分",
         })
 
+    # Item Highlights checks [重建 2026-11-10]
+    if highlights:
+        all_violations.extend(check_highlights_length(highlights))
+    else:
+        warnings.append("未找到「商品亮点 / Item Highlights」段，未校验 125 字符上限")
+
     # Search Terms checks
     if search_terms:
         all_violations.extend(check_search_terms_bytes(search_terms))
@@ -283,9 +297,10 @@ def validate_listing(filepath: str, is_apparel: bool = False) -> dict:
         "violations_count": len(all_violations),
         "violations": all_violations,
         "title_length": len(title) if title else 0,
+        "highlights_length": len(highlights) if highlights else 0,
+        "warnings": warnings,
         "search_terms_bytes": len(search_terms.encode('utf-8')) if search_terms else 0,
     }
-
 
 # ============================================================
 # 内置测试
@@ -305,8 +320,10 @@ def run_tests():
         ("最高级表达", "The world's best and most popular product", True),
         ("Emoji 检测", "Great product! 🎉 Love it! ❤️", True),
         ("干净文案", "Made from 180 GSM ring-spun cotton, soft and breathable for all-day wear", False),
-        ("标题长度(通过)", "A" * 199, False),
-        ("标题长度(违规)", "A" * 201, True),
+        ("标题长度(通过)", "A" * 75, False),
+        ("标题长度(违规)", "A" * 76, True),
+        ("商品亮点(通过)", "B" * 125, False),
+        ("商品亮点(违规)", "B" * 126, True),
     ]
 
     passed = 0
@@ -325,6 +342,8 @@ def run_tests():
             violations.extend(check_title_length(text, False))
         elif name == "标题长度(违规)":
             violations.extend(check_title_length(text, False))
+        elif name.startswith("商品亮点"):
+            violations.extend(check_highlights_length(text))
 
         has_violation = len(violations) > 0
         test_pass = has_violation == should_have_violation
@@ -343,7 +362,6 @@ def run_tests():
     print(f"\n结果: {passed} 通过, {failed} 失败")
     return failed == 0
 
-
 # ============================================================
 # CLI
 # ============================================================
@@ -351,7 +369,7 @@ def run_tests():
 def main():
     parser = argparse.ArgumentParser(description="Amazon Listing 合规校验")
     parser.add_argument("--input", type=str, help="Listing Markdown 文件路径")
-    parser.add_argument("--apparel", action="store_true", help="服装类目 (标题上限 125 字符)")
+    parser.add_argument("--apparel", action="store_true", help="兼容旧参数；2026-07-27 起标题统一 75 字符")
     parser.add_argument("--test-blacklist", action="store_true", help="运行内置违禁词测试")
 
     args = parser.parse_args()
@@ -370,7 +388,10 @@ def main():
     print(f"合规检查结果: {result['status']}")
     print(f"{'=' * 60}")
     print(f"标题字符数: {result['title_length']}")
+    print(f"商品亮点字符数: {result.get('highlights_length', 0)}")
     print(f"Search Terms 字节数: {result['search_terms_bytes']}")
+    for w in result.get('warnings', []):
+        print(f"⚠️ {w}")
     print(f"违规项数量: {result['violations_count']}")
 
     if result['violations']:
@@ -383,7 +404,6 @@ def main():
 
     print(f"\n{'=' * 60}")
     sys.exit(0 if result['status'] == 'PASS' else 1)
-
 
 if __name__ == "__main__":
     main()

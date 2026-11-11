@@ -13,7 +13,7 @@ import json
 import argparse
 
 # ── 先解析参数，确定类目（config 按 ABA_CATEGORY 选择 data/<slug>/）
-_ap = argparse.ArgumentParser(description="亚马逊 ABA 爆品关键词监测（box 版）")
+_ap = argparse.ArgumentParser(description="亚马逊 ABA 爆品关键词监测")
 _ap.add_argument("step", nargs="?", default="help",
                  choices=["help", "list", "init", "init-confirm", "step1", "step2", "step3", "html"])
 _ap.add_argument("--category", "-c", help="类目 slug（data/<slug>/），也可用环境变量 ABA_CATEGORY")
@@ -63,7 +63,6 @@ SCRAPED_PATH = os.path.join(config.get_exchange_dir(), "scraped.json")
 LOCAL_MATCH_PATH = os.path.join(config.get_exchange_dir(), "local_match.json")
 TIERED_PATH = os.path.join(config.get_exchange_dir(), "tiered.json")
 
-
 def step1_scrape_and_local_match():
     logger.info("=" * 60)
     logger.info("🧬 第 1 步: 抓取 + 本地词典匹配")
@@ -109,7 +108,6 @@ def step1_scrape_and_local_match():
             json.dump({}, f)
         logger.info("✅ 第 1 步完成。所有关键词已由本地词典匹配")
     return True
-
 
 def step2_analyze():
     logger.info("=" * 60)
@@ -190,7 +188,6 @@ def step2_analyze():
     logger.info(f"   写入同目录 analysis_output.json 后运行 step3")
     return True
 
-
 def step3_render_report(dry_run=False):
     logger.info("=" * 60)
     logger.info("📝 第 3 步: 生成飞书多维表格报告")
@@ -233,7 +230,6 @@ def step3_render_report(dry_run=False):
     logger.info("=" * 60)
     return bitable_url
 
-
 def step_html():
     """可选：用原版 jinja2 模板生成本地 HTML 报告（不依赖飞书）"""
     with open(TIERED_PATH, "r", encoding="utf-8") as f:
@@ -248,7 +244,6 @@ def step_html():
                            sorftime_stats=tiered_data.get("sorftime_stats", {}))
     logger.info(f"HTML 报告: {path}")
     return path
-
 
 if __name__ == "__main__":
     step = ARGS.step

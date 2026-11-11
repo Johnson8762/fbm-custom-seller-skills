@@ -16,7 +16,6 @@ import sys
 import html as html_module
 from pathlib import Path
 
-
 # ─── Extractors ───────────────────────────────────────────────────────────────
 
 def extract_section(content, heading_pattern):
@@ -29,7 +28,6 @@ def extract_section(content, heading_pattern):
     end = start + next_heading.start() if next_heading else len(content)
     return content[start:end].strip()
 
-
 def extract_title(content):
     section = extract_section(content, r"Title|标题")
     for line in section.split('\n'):
@@ -40,7 +38,6 @@ def extract_title(content):
         if len(clean) > 20:
             return clean
     return ""
-
 
 def extract_bullet_points(content):
     section = extract_section(content, r"Bullet|五点")
@@ -63,7 +60,6 @@ def extract_bullet_points(content):
         bullets.append(current)
     return [b for b in bullets if len(b) > 50]
 
-
 def extract_description(content):
     section = extract_section(content, r"Description|产品描述")
     lines, in_html = [], False
@@ -77,7 +73,6 @@ def extract_description(content):
             lines.append(line)
     return '\n'.join(lines).strip()
 
-
 def extract_search_terms(content):
     section = extract_section(content, r"Search Terms|搜索词")
     for line in section.split('\n'):
@@ -89,14 +84,12 @@ def extract_search_terms(content):
             return clean
     return ""
 
-
 def extract_product_name(content):
     match = re.search(r'产品关键词[：:]\s*(.+)', content)
     if match:
         return match.group(1).strip()
     match = re.search(r'^#\s+(.+)', content, re.MULTILINE)
     return match.group(1).strip() if match else "Amazon Listing"
-
 
 def extract_main_image_prompt(content):
     section = extract_section(content, r"主图设计|Main Image")
@@ -122,7 +115,6 @@ def extract_main_image_prompt(content):
                 break
     return result
 
-
 def extract_secondary_image_prompts(content):
     section = extract_section(content, r"副图设计|Secondary Image")
     if not section:
@@ -136,7 +128,6 @@ def extract_secondary_image_prompts(content):
         if len(cells) >= 3:
             images.append({'index': cells[0], 'type': cells[1], 'prompt': cells[2]})
     return images
-
 
 def extract_aplus_prompt(content):
     section = extract_section(content, r"A\+\s*内容|A\+\s*Content")
@@ -154,7 +145,6 @@ def extract_aplus_prompt(content):
     if modules:
         result['modules'] = modules
     return result
-
 
 def extract_video_script(content):
     section = extract_section(content, r"视频脚本|Video Script")
@@ -176,24 +166,19 @@ def extract_video_script(content):
         result['scenes'] = rows
     return result
 
-
 def extract_strategy_brief(content):
     return extract_section(content, r"策略分析简报|Strategy Brief")
-
 
 # ─── HTML Section Builders ────────────────────────────────────────────────────
 
 def h(s):
     return html_module.escape(str(s))
 
-
 def js_escape(s):
     return s.replace('\\', '\\\\').replace("'", "\\'").replace('\n', '\\n').replace('\r', '')
 
-
 COPY_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>'
 COPY_SVG_SM = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>'
-
 
 def build_strategy_section(strategy_brief):
     if not strategy_brief:
@@ -224,7 +209,6 @@ def build_strategy_section(strategy_brief):
         '</div>\n'
     )
 
-
 def build_main_image_section(main_image):
     if not main_image:
         return ""
@@ -245,7 +229,6 @@ def build_main_image_section(main_image):
         '  </div>\n'
         '</div>\n'
     )
-
 
 def build_secondary_images_section(secondary_images):
     if not secondary_images:
@@ -279,7 +262,6 @@ def build_secondary_images_section(secondary_images):
         '</div>\n'
     )
 
-
 def build_aplus_section(aplus):
     if not aplus:
         return ""
@@ -309,7 +291,6 @@ def build_aplus_section(aplus):
         '  </div>\n'
         '</div>\n'
     )
-
 
 def build_video_section(video_script):
     if not video_script:
@@ -344,7 +325,6 @@ def build_video_section(video_script):
         '</div>\n'
     )
 
-
 # ─── Main HTML Generator ─────────────────────────────────────────────────────
 
 def generate_html(title, bullets, description, search_terms, product_name,
@@ -365,7 +345,7 @@ def generate_html(title, bullets, description, search_terms, product_name,
 
     title_chars = len(title)
     st_bytes = len(search_terms.encode('utf-8'))
-    title_status = 'pass' if title_chars <= 200 else 'warning'
+    title_status = 'pass' if title_chars <= 75 else 'warning'  # 重建 2026-11-10：75 字符新规
     st_status = 'pass' if st_bytes <= 249 else 'warning'
 
     # Reference zone sections
@@ -510,7 +490,7 @@ def generate_html(title, bullets, description, search_terms, product_name,
           <div class="card-body" id="title-text">''' + h(title) + '''</div>
         </div>
         <div class="stats">
-          <div class="stat ''' + title_status + '''">字符数: <span class="value">''' + str(title_chars) + '''</span> / 200</div>
+          <div class="stat ''' + title_status + '''">字符数: <span class="value">''' + str(title_chars) + '''</span> / 75</div>
         </div>
       </div>
 
@@ -635,7 +615,6 @@ def generate_html(title, bullets, description, search_terms, product_name,
 </html>'''
     return html
 
-
 def main():
     parser = argparse.ArgumentParser(description="Listing HTML 可视化生成器 v2")
     parser.add_argument("--input", required=True, help="listing_output.md 文件路径")
@@ -681,7 +660,6 @@ def main():
     print(f"\n✅ HTML 可视化页面已生成: {output_path}")
     print(f"   标题: {len(title)} 字符 | 五点: {len(bullets)} 条 | 搜索词: {len(search_terms.encode('utf-8'))} bytes")
     print(f"   副图: {len(secondary_images)} 张 | 视频场景: {len(video_script.get('scenes', []))} 个")
-
 
 if __name__ == "__main__":
     main()

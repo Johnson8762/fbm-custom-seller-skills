@@ -49,7 +49,6 @@ if sys.platform == "win32":
 
 from openpyxl import Workbook, load_workbook
 
-
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
@@ -97,15 +96,12 @@ CHAPTER_TITLES = {
     "ch10_appendix": "十、数据来源与附录",
 }
 
-
 def _is_v2(payload: dict[str, Any]) -> bool:
     sv = payload.get("schema_version", "")
     return sv in ("2.0", "2.0_custom") and "chapters" in payload
 
-
 def _is_custom_v2(payload: dict[str, Any]) -> bool:
     return payload.get("schema_version") == "2.0_custom" and "chapters" in payload
-
 
 def _normalize_custom_schema(payload: dict[str, Any]) -> dict[str, Any]:
     """Map 2.0_custom chapter keys → standard v2 chapter keys.
@@ -422,7 +418,6 @@ def _normalize_custom_schema(payload: dict[str, Any]) -> dict[str, Any]:
     payload["_original_schema"] = "2.0_custom"
     return payload
 
-
 # ---------------------------------------------------------------------------
 # Payload reading
 # ---------------------------------------------------------------------------
@@ -462,7 +457,6 @@ def read_payload(path: Path) -> dict[str, Any]:
             raise ValueError("excel_sheets 必须是非空 object")
     return payload
 
-
 # ---------------------------------------------------------------------------
 # Path helpers
 # ---------------------------------------------------------------------------
@@ -470,10 +464,8 @@ def read_payload(path: Path) -> dict[str, Any]:
 def build_output_dir(metadata: dict[str, Any], root: Path) -> Path:
     return root / "工作成果" / "brands" / metadata["brand"] / "市场调研" / metadata["category"] / metadata["version"]
 
-
 def build_base_name(metadata: dict[str, Any]) -> str:
     return f'{metadata["date"]}_{metadata["site"]}_{metadata["keyword"]}'
-
 
 def build_paths(metadata: dict[str, Any], root: Path) -> dict[str, Path]:
     output_dir = build_output_dir(metadata, root)
@@ -486,7 +478,6 @@ def build_paths(metadata: dict[str, Any], root: Path) -> dict[str, Path]:
         "xlsx": output_dir / f"{base_name}_市场调研_数据_{version}.xlsx",
         "dashboard": output_dir / f"{base_name}_可视化看板_{version}.html",
     }
-
 
 # ---------------------------------------------------------------------------
 # Shared helpers
@@ -505,7 +496,6 @@ def render_frontmatter(metadata: dict[str, Any]) -> str:
         "---\n\n"
     )
 
-
 def _md_table(headers: list[str], rows: list[list[str]]) -> str:
     lines = ["| " + " | ".join(headers) + " |"]
     lines.append("| " + " | ".join("---" for _ in headers) + " |")
@@ -513,12 +503,10 @@ def _md_table(headers: list[str], rows: list[list[str]]) -> str:
         lines.append("| " + " | ".join(str(c) for c in row) + " |")
     return "\n".join(lines)
 
-
 def _safe(val: Any) -> str:
     if val is None:
         return ""
     return str(val)
-
 
 # ---------------------------------------------------------------------------
 # v2 Markdown renderer
@@ -540,7 +528,6 @@ def render_markdown(chapters: dict[str, Any], metadata: dict[str, Any]) -> str:
 
     return "\n".join(parts)
 
-
 def _render_ch01_md(ch: dict[str, Any]) -> str:
     lines: list[str] = []
     verdict = ch.get("go_nogo_verdict", "")
@@ -558,7 +545,6 @@ def _render_ch01_md(ch: dict[str, Any]) -> str:
             action = _safe(c.get("action"))
             lines.append(f"{i}. **{dp}** → {meaning} → 💡 {action}")
     return "\n".join(lines)
-
 
 def _render_ch02_md(ch: dict[str, Any]) -> str:
     lines: list[str] = []
@@ -582,7 +568,6 @@ def _render_ch02_md(ch: dict[str, Any]) -> str:
         lines.append(f"\n**关键洞察：**\n\n{insight}")
     return "\n".join(lines)
 
-
 def _render_ch03_md(ch: dict[str, Any]) -> str:
     lines: list[str] = []
     for dim in ch.get("dimensions", []):
@@ -601,7 +586,6 @@ def _render_ch03_md(ch: dict[str, Any]) -> str:
         if insight:
             lines.append(f"\n**关键洞察：**\n\n{insight}")
     return "\n".join(lines)
-
 
 def _render_ch04_md(ch: dict[str, Any]) -> str:
     lines: list[str] = []
@@ -626,7 +610,6 @@ def _render_ch04_md(ch: dict[str, Any]) -> str:
         if findings:
             lines.append(f"\n**关键发现：**\n\n{findings}")
     return "\n".join(lines)
-
 
 def _render_ch05_md(ch: dict[str, Any]) -> str:
     lines: list[str] = []
@@ -656,7 +639,6 @@ def _render_ch05_md(ch: dict[str, Any]) -> str:
         lines.append(f"\n**关键洞察：**\n\n{insight}")
     return "\n".join(lines)
 
-
 def _render_ch06_md(ch: dict[str, Any]) -> str:
     lines: list[str] = []
     for dim in ch.get("by_dimension", []):
@@ -682,7 +664,6 @@ def _render_ch06_md(ch: dict[str, Any]) -> str:
             lines.append(f"| {_safe(p.get('description'))} | {support} | {opp} | {sol} |")
     return "\n".join(lines)
 
-
 def _render_ch07_md(ch: dict[str, Any]) -> str:
     lines: list[str] = []
     method = ch.get("scoring_method", "")
@@ -703,7 +684,6 @@ def _render_ch07_md(ch: dict[str, Any]) -> str:
     if insight:
         lines.append(f"\n**关键洞察：**\n\n{insight}")
     return "\n".join(lines)
-
 
 def _render_ch08_md(ch: dict[str, Any]) -> str:
     lines: list[str] = []
@@ -731,7 +711,6 @@ def _render_ch08_md(ch: dict[str, Any]) -> str:
     if timeline:
         lines.append(f"\n### 时间线建议\n\n{timeline}")
     return "\n".join(lines)
-
 
 def _render_ch09_md(ch: dict[str, Any]) -> str:
     lines: list[str] = []
@@ -777,7 +756,6 @@ def _render_ch09_md(ch: dict[str, Any]) -> str:
         lines.append(_md_table(headers, rows))
     return "\n".join(lines)
 
-
 def _render_ch10_md(ch: dict[str, Any]) -> str:
     lines: list[str] = []
     data_date = ch.get("data_date", "")
@@ -804,7 +782,6 @@ def _render_ch10_md(ch: dict[str, Any]) -> str:
         lines.append(_md_table(headers, rows))
     return "\n".join(lines)
 
-
 _MD_RENDERERS = {
     "ch01_executive_summary": _render_ch01_md,
     "ch02_market_overview": _render_ch02_md,
@@ -818,7 +795,6 @@ _MD_RENDERERS = {
     "ch10_appendix": _render_ch10_md,
 }
 
-
 # ---------------------------------------------------------------------------
 # v2 HTML 精简报告 renderer
 # ---------------------------------------------------------------------------
@@ -826,7 +802,6 @@ _MD_RENDERERS = {
 def _h(text: Any) -> str:
     """HTML-escape helper."""
     return html_lib.escape(str(text)) if text else ""
-
 
 def render_html_report(chapters: dict[str, Any], metadata: dict[str, Any]) -> str:
     topic = _h(metadata.get("topic", "选品分析报告"))
@@ -1135,7 +1110,6 @@ def render_html_report(chapters: dict[str, Any], metadata: dict[str, Any]) -> st
 </body>
 </html>"""
 
-
 # ---------------------------------------------------------------------------
 # v2 Dashboard renderer
 # ---------------------------------------------------------------------------
@@ -1164,7 +1138,6 @@ def render_dashboard(payload: dict[str, Any], chapters: dict[str, Any], metadata
 
     return result
 
-
 def _parse_share_to_number(share_str: str) -> float:
     """Parse '33.8%' → 33.8, or pass through if already numeric."""
     if isinstance(share_str, (int, float)):
@@ -1174,7 +1147,6 @@ def _parse_share_to_number(share_str: str) -> float:
         return float(cleaned)
     except ValueError:
         return 0.0
-
 
 def _build_dashboard_view_model(payload: dict[str, Any], chapters: dict[str, Any], metadata: dict[str, Any]) -> dict[str, Any]:
     """Build the DATA object consumed by the dashboard template JS.
@@ -1680,7 +1652,6 @@ def _build_dashboard_view_model(payload: dict[str, Any], chapters: dict[str, Any
         "page_title": metadata.get("topic", ""),
     }
 
-
 def _extract_number(text: str) -> float:
     """Extract first numeric value from a string like '$5.2M' or '55,497件'."""
     cleaned = str(text).replace(",", "").replace("$", "").replace("¥", "").replace("€", "")
@@ -1693,7 +1664,6 @@ def _extract_number(text: str) -> float:
     elif "K" in str(text) or "k" in str(text):
         val *= 1_000
     return val
-
 
 # ---------------------------------------------------------------------------
 # Excel writer (shared)
@@ -1715,12 +1685,10 @@ def write_xlsx(path: Path, sheets: dict[str, list[dict[str, Any]]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     wb.save(path)
 
-
 def write_json_artifacts(output_dir: Path, artifacts: dict[str, Any]) -> None:
     for filename, data in artifacts.items():
         target = output_dir / filename
         target.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-
 
 # ---------------------------------------------------------------------------
 # v1 legacy helpers
@@ -1730,7 +1698,6 @@ def ensure_markdown(frontmatter: str, body: str) -> str:
     if body.startswith("---\n"):
         return body
     return frontmatter + body.lstrip()
-
 
 # ---------------------------------------------------------------------------
 # Generate
@@ -1780,7 +1747,6 @@ def generate(payload: dict[str, Any], root: Path) -> dict[str, Path]:
 
     return paths
 
-
 # ---------------------------------------------------------------------------
 # Validation
 # ---------------------------------------------------------------------------
@@ -1795,7 +1761,6 @@ def validate_frontmatter(md_path: Path) -> list[str]:
         if field not in content.split("---\n", 2)[1]:
             errors.append(f"Markdown YAML 头缺少字段: {field[:-1]}")
     return errors
-
 
 def validate_html(html_path: Path) -> list[str]:
     content = html_path.read_text(encoding="utf-8")
@@ -1813,7 +1778,6 @@ def validate_html(html_path: Path) -> list[str]:
     if "品牌/竞品格局" not in content and "品牌格局" not in content and "竞品格局" not in content:
         errors.append('HTML 缺少"品牌/竞品格局"区块')
     return errors
-
 
 def validate_xlsx(xlsx_path: Path, expected_sheets: dict[str, Any], payload: dict[str, Any] | None = None) -> list[str]:
     errors = []
@@ -1834,7 +1798,6 @@ def validate_xlsx(xlsx_path: Path, expected_sheets: dict[str, Any], payload: dic
         if sheet not in sheet_names:
             errors.append(f"Excel 缺少 payload 中声明的 Sheet: {sheet}")
     return errors
-
 
 def validate_v2_chapters(chapters: dict[str, Any]) -> list[str]:
     """Validate v2 chapters structure and required fields."""
@@ -1887,7 +1850,6 @@ def validate_v2_chapters(chapters: dict[str, Any]) -> list[str]:
 
     return errors
 
-
 def validate_insight_quality(md_path: Path) -> list[str]:
     """检查报告的洞察质量，确保不是纯数据堆砌。"""
     content = md_path.read_text(encoding="utf-8")
@@ -1927,7 +1889,6 @@ def validate_insight_quality(md_path: Path) -> list[str]:
 
     return warnings
 
-
 def validate_payload_structure(payload: dict[str, Any]) -> list[str]:
     errors = []
     sheets = payload["excel_sheets"]
@@ -1940,7 +1901,6 @@ def validate_payload_structure(payload: dict[str, Any]) -> list[str]:
             errors.append(f"payload.excel_sheets 缺少必选 Sheet: {sheet}")
     return errors
 
-
 def validate_paths(metadata: dict[str, Any], paths: dict[str, Path]) -> list[str]:
     errors = []
     expected_dir = Path("工作成果") / "brands" / metadata["brand"] / "市场调研" / metadata["category"] / metadata["version"]
@@ -1951,7 +1911,6 @@ def validate_paths(metadata: dict[str, Any], paths: dict[str, Path]) -> list[str
         if not paths[key].name.startswith(base_name):
             errors.append(f"{key.upper()} 文件名不符合 date_site_keyword 规范")
     return errors
-
 
 def validate(payload: dict[str, Any], root: Path) -> tuple[dict[str, Path], list[str]]:
     metadata = payload["metadata"]
@@ -1982,7 +1941,6 @@ def validate(payload: dict[str, Any], root: Path) -> tuple[dict[str, Path], list
 
     return paths, errors
 
-
 # ---------------------------------------------------------------------------
 # CLI entry
 # ---------------------------------------------------------------------------
@@ -2005,7 +1963,7 @@ def main() -> int:
     )
     parser.add_argument("command", choices=["generate", "validate", "all"])
     parser.add_argument("--input", "-i", required=True, help="统一 JSON 数据包路径（支持相对或绝对路径）")
-    parser.add_argument("--root", default="reports/product-research", help="输出根目录（box 默认 reports/product-research）")
+    parser.add_argument("--root", default="reports/product-research", help="输出根目录（默认 reports/product-research）")
     args = parser.parse_args()
 
     try:
@@ -2046,7 +2004,6 @@ def main() -> int:
         import traceback
         traceback.print_exc()
         return 1
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

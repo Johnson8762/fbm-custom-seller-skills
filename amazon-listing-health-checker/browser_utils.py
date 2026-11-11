@@ -45,14 +45,12 @@ USER_AGENTS = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:134.0) Gecko/20100101 Firefox/134.0",
 ]
 
-
 def get_site_config(site_code: str) -> dict:
     """获取站点配置"""
     code = site_code.upper()
     if code not in SITE_CONFIG:
         raise ValueError(f"不支持的站点: {site_code}，支持: {', '.join(SITE_CONFIG.keys())}")
     return SITE_CONFIG[code]
-
 
 def _curl_common_headers() -> list:
     """返回通用 curl header 参数"""
@@ -62,7 +60,6 @@ def _curl_common_headers() -> list:
         "-H", "Accept-Language: en-US,en;q=0.9",
         "-H", "Connection: keep-alive",
     ]
-
 
 def fetch_page(url: str, timeout: int = 30) -> str:
     """
@@ -87,7 +84,6 @@ def fetch_page(url: str, timeout: int = 30) -> str:
         return result.stdout
     except (subprocess.TimeoutExpired, Exception):
         return ""
-
 
 def set_delivery_location(domain: str, zip_code: str, timeout: int = 15) -> str:
     """
@@ -163,7 +159,6 @@ def set_delivery_location(domain: str, zip_code: str, timeout: int = 15) -> str:
     throttle(0.5, 1.0)
     return cookie_jar
 
-
 def fetch_page_with_location(url: str, domain: str, zip_code: str, timeout: int = 30) -> str:
     """
     先设置配送邮编，再用同一 cookie session 抓取目标页面。
@@ -204,7 +199,6 @@ def fetch_page_with_location(url: str, domain: str, zip_code: str, timeout: int 
         except OSError:
             pass
 
-
 def check_captcha(html: str) -> bool:
     """检测是否命中验证码/拦截页面"""
     if len(html) < 10000:
@@ -219,11 +213,9 @@ def check_captcha(html: str) -> bool:
         return any(s in lower for s in captcha_signals)
     return False
 
-
 def throttle(min_sec: float = 1.0, max_sec: float = 3.0):
     """请求间随机延迟，降低被限流概率"""
     time.sleep(random.uniform(min_sec, max_sec))
-
 
 def _log(msg: str):
     """输出调试日志到 stderr（不影响 stdout 的 JSON）"""

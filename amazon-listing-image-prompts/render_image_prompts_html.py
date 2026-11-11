@@ -41,7 +41,6 @@ import sys
 import os
 from pathlib import Path
 
-
 def load_html_template():
     """Load the HTML template from the scripts directory."""
     template_path = Path(__file__).parent / "image_prompt_template.html"
@@ -49,7 +48,6 @@ def load_html_template():
         return template_path.read_text(encoding="utf-8")
     # Fallback: generate inline
     return generate_inline_template()
-
 
 def generate_inline_template():
     """Generate the HTML template inline as fallback."""
@@ -66,7 +64,6 @@ def generate_inline_template():
 <script>{{SCRIPTS}}</script>
 </body>
 </html>"""
-
 
 def build_card_html(title: str, subtitle: str, prompt: str, strategy: str = "", card_id: str = "") -> str:
     """Build an individual prompt card."""
@@ -100,7 +97,6 @@ def build_card_html(title: str, subtitle: str, prompt: str, strategy: str = "", 
         </div>
     </div>"""
 
-
 def build_section_html(section_title: str, section_icon: str, cards_html: str, section_id: str) -> str:
     """Build a section container."""
     return f"""
@@ -113,7 +109,6 @@ def build_section_html(section_title: str, section_icon: str, cards_html: str, s
             {cards_html}
         </div>
     </section>"""
-
 
 def render_html(data: dict) -> str:
     """Render the full HTML page from structured data."""
@@ -225,7 +220,6 @@ def render_html(data: dict) -> str:
     
     return html
 
-
 def main():
     if len(sys.argv) < 3:
         print("Usage: python render_image_prompts_html.py <input.json> <output.html>")
@@ -244,7 +238,6 @@ def main():
         f.write(html)
     
     print(f"✅ Generated: {output_path}")
-
 
 if __name__ == "__main__":
     main()

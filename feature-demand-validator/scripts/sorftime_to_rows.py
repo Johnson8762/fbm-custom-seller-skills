@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """把 Sorftime 原始返回（_shared/sorftime_http.py 的输出 JSON）转换为 generate_keyword_csv.py 需要的结构化行。
-box 新增脚本：原版由 AI 手工整理；这里给出确定性转换，AI 只需补"变化率/趋势方向/关联度"等判断列。
+确定性转换：AI 只需补"变化率/趋势方向/关联度"等判断列。
   python sorftime_to_rows.py --type detail|trend|extends --raw raw.json --keyword "leather journal" -o rows.json
 """
 import argparse, json, os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "amazon-aba-keyword-monitor"))
 import sorftime_client as sc  # noqa: E402  复用解析器（兼容新旧 cpc 格式）
-
 
 def main():
     ap = argparse.ArgumentParser()
@@ -37,7 +36,6 @@ def main():
                 for e in sc.parse_extends(raw)]
     json.dump(rows, open(a.output, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     print(f"✅ {a.type}: {len(rows)} 行 → {a.output}")
-
 
 if __name__ == "__main__":
     main()

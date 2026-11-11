@@ -111,7 +111,7 @@ ST 补充: [词] — 来源: [MCP:keyword_extends]
 
 ### 标题
 - Brand + Core Keyword + Core USP + Key Specs
-- <= 200 字符（服装 <= 125）
+- <= 75 字符；另写 <= 125 字符商品亮点
 - 核心关键词在前 80 字符
 - 同一单词 <= 2 次
 
@@ -166,7 +166,7 @@ ST 补充: [词] — 来源: [MCP:keyword_extends]
 3. 未验证声明: 是否声明了 FDA Approved、Clinically Proven 等？
 4. 农药/抗菌: 是否使用了 kills、antibacterial 等？
 5. 特殊字符: 标题中是否有 !、$、?、emoji？
-6. 标题长度: 是否超过 200 字符（服装 125）？
+6. 标题长度: 是否超过 75 字符？商品亮点是否超过 125 字符？
 7. 单词重复: 标题中同一单词是否超过 2 次？
 8. Search Terms: 是否超过 249 bytes？
 9. 竞品名: 是否包含其他品牌名？

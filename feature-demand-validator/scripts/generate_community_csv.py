@@ -42,15 +42,12 @@ COLUMNS = [
     "采集时间",
 ]
 
-
 def load_data(path: str) -> list[dict]:
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
-
 def default_captured_at() -> str:
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
 
 def normalize_row(row: dict, raw_file: str, captured_at: str, source_type: str, source_ref: str) -> dict:
     query = row.get("WebSearch查询词", source_ref)
@@ -68,7 +65,6 @@ def normalize_row(row: dict, raw_file: str, captured_at: str, source_type: str, 
         "原始文件名": row.get("原始文件名", raw_file),
         "采集时间": row.get("采集时间", captured_at),
     }
-
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="社区讨论数据 → CSV")
@@ -95,7 +91,6 @@ def main() -> int:
     result = {"csv_path": args.output, "csv_rows": len(rows)}
     print(json.dumps(result, ensure_ascii=False))
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

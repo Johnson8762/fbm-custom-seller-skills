@@ -7,5 +7,6 @@ description: >-
 # 亚马逊 Listing 诊断
 
 1. 先用 Read 完整读取 `amazon-listing-checker/SKILL_FULL.md`（完整方法论、判断标准、输出模板）。
-2. 严格按其中步骤执行；文档、示例和脚本在 `amazon-listing-checker/`，Python 用 `python`。
+2. 严格按其中步骤执行；文档、示例和脚本在 `amazon-listing-checker/`，Python 用 `python`（共享 venv）。
 3. 拿不到的数据写“未获取到”，不得编造。
+

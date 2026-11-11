@@ -1,0 +1,39 @@
+{
+  "_note": "示例费用表，只用于演示定价方法：假设卖家在墨西哥、结算币种 MXN，并分别计算有 RFC / 无 RFC 两档。百分比和固定金额不是经核对的现行 Etsy、税务或银行官方费率。使用前请对照 Etsy 现行费用页和你自己的税务情况，再修改本文件。",
+  "seller_country": "MX",
+  "shop_currency": "MXN",
+  "example_as_of": "2026-10-26",
+  "example_as_of_note": "只是这张示例表的标注日期，不是官方核验日期。",
+  "components": {
+    "transaction_fee_pct": 6.5,
+    "payment_processing_pct": 4.5,
+    "payment_processing_base_includes_us_sales_tax_pct": 7.0,
+    "payment_processing_fixed_mxn": 8.0,
+    "listing_fee_usd": 0.20,
+    "iva_on_fees_pct": 16.0,
+    "isr_withholding_pct_with_rfc": 2.5,
+    "isr_withholding_pct_without_rfc": 20.0,
+    "currency_conversion_pct": 0.0,
+    "currency_conversion_note": "示例假设 listing 与收款都是 MXN，因此示例里不另加币种转换费。你的店铺如果不是这样，请改这个字段。",
+    "offsite_ads_pct_optional": 15.0
+  },
+  "derived": {
+    "pct_of_buyer_paid_with_rfc": 15.625,
+    "pct_of_buyer_paid_without_rfc": 33.125,
+    "fixed_mxn_per_order": 13.6,
+    "formula": "示例推算：fee = paid × pct + 13.6 MXN；pct = (6.5 + 4.5×1.07)×1.16 + ISR；fixed = (8 MXN + 0.20 USD×MXN/USD)×1.16 ≈ 13.6。这不是官方费率核验。"
+  },
+  "fx": {
+    "CNY_per_USD": 6.5,
+    "CNY_per_USD_note": "示例规划汇率，用来换算示例成本。请换成你自己的成本汇率，不是官方汇率。",
+    "MXN_per_USD_default": 18.614,
+    "MXN_per_USD_source": "示例默认值，方便命令在不额外传参时能跑通。新算价时用 --mxn-per-usd 传入当日 open.er-api 的值。不是 Etsy 汇率。"
+  },
+  "shop_policy": {
+    "store_has_rfc": null,
+    "store_has_rfc_source": "这里不记录任何店铺的税务状态。示例命令默认按有 RFC 一档计算；你的店铺没有 RFC 时加 --no-rfc。",
+    "shop_wide_discount_pct_example": 20,
+    "shop_wide_discount_note": "只是 --discount 的示例输入，不是任何店铺正在使用的折扣。",
+    "buyer_paid_formula": "买家实付 = 标价 × (1 − 折扣)"
+  }
+}

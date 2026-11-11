@@ -20,14 +20,11 @@ import json
 import re
 from pathlib import Path
 
-
 def load_json(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
-
 def normalize_text(text: str) -> str:
     return re.sub(r"\s+", " ", text.lower()).strip()
-
 
 def match_dimension(title: str, rule: dict) -> tuple[str, str]:
     text = normalize_text(title)
@@ -44,7 +41,6 @@ def match_dimension(title: str, rule: dict) -> tuple[str, str]:
         if any(keyword.lower() in text for keyword in item.get("terms", [])):
             return item["value"], "medium"
     return rule.get("default", "未知"), "low"
-
 
 def parse_products(products: list[dict], rules: dict) -> tuple[list[dict], list[dict]]:
     parsed = []
@@ -70,7 +66,6 @@ def parse_products(products: list[dict], rules: dict) -> tuple[list[dict], list[
             )
     return parsed, uncertain
 
-
 def main() -> int:
     parser = argparse.ArgumentParser(description="解析 Top100 标题维度")
     parser.add_argument("--input", "-i", required=True, help="Top100 原始 JSON")
@@ -86,7 +81,6 @@ def main() -> int:
     Path(args.uncertain).write_text(json.dumps(uncertain, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"parsed={len(parsed)} uncertain={len(uncertain)}")
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

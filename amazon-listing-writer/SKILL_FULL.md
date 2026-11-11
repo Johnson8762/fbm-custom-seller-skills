@@ -5,10 +5,10 @@ description: 当用户要为亚马逊产品（尤其定制/个性化产品）写
 
 # Amazon Listing 智能生成器（amazon-listing-writer）
 
-## 运行环境（box）
+## 运行环境
 
 - 资料目录：`amazon-listing-writer/`；参考文件在 `amazon-listing-writer/references/`，脚本 `validate_listing.py`、`render_listing_html.py` 在 `amazon-listing-writer/`
-- Sorftime：box 上已接入 Sorftime MCP（`user-sorftime` 命名空间，先 `GetDynamicTools` 看参数再 `CallDynamicTool`）；脚本内调用用 `_shared/sorftime_http.py`（读环境变量 `SORFTIME_KEY`，**绝不打印**）。下文所有 `MCP:工具名` 都指这些 Sorftime 工具。
+- Sorftime：脚本用 `_shared/sorftime_http.py`（读环境变量 `SORFTIME_KEY`，**绝不打印**）。只有配置了密钥，或使用者自己接入 Sorftime 时才能调用；下文 `MCP:工具名` 指 Sorftime 工具名，不是本仓库自带的服务。
 - 每轮并发 Sorftime 调用不超过 3 个（原规则保留）
 - 工作成果目录：`reports/listing/[产品关键词]/`（step 文件、最终 MD、HTML）
 - 校验：`python amazon-listing-writer/validate_listing.py --input <listing.md> [--apparel]`（原脚本的章节提取正则有 bug，已修复）
@@ -17,7 +17,6 @@ description: 当用户要为亚马逊产品（尤其定制/个性化产品）写
 - 下游：图片 → `amazon-listing-image-prompts`；上架前验证 → `amazon-rufus-qa-tester`；上架后验收 → `amazon-listing-health-checker`
 
 ---
-
 
 ## 定位
 
@@ -277,7 +276,7 @@ description: 当用户要为亚马逊产品（尤其定制/个性化产品）写
 1. **策略分析简报**（Step 4 的输出）— 📊 分析参考区
 2. **标题（Title）** — 📋 可复制区
    - 格式：Brand + Core Keyword + Core USP + Key Specs
-   - 上限 200 字符（服装类 125 字符）
+   - 上限 75 字符（2026-07-27 新规，所有类目；另写 ≤125 字符商品亮点 Item Highlights）
    - 同一单词最多出现 2 次
 3. **五点描述（Bullet Points）** — 📋 可复制区
    - 格式：`[HEADER] — [Benefit + Data Proof]`
@@ -310,7 +309,7 @@ description: 当用户要为亚马逊产品（尤其定制/个性化产品）写
    - [ ] 无农药/抗菌声明（除非有认证）
    - [ ] 无禁用特殊字符
    - [ ] 无 emoji
-   - [ ] 标题字符数 <= 200（服装 <= 125）
+   - [ ] 标题字符数 <= 75；商品亮点 <= 125
    - [ ] Search Terms <= 249 bytes
    - [ ] 同一单词在标题中不超过 2 次
 3. 发现违规项 → 自动替换为合规表达 → 标注替换记录
@@ -348,7 +347,7 @@ description: 当用户要为亚马逊产品（尤其定制/个性化产品）写
 6. ⛔ **事实一致性**：创作代理不得引入证据代理和逻辑代理未确认的事实
 7. ⛔ **无最高级**：禁止 best、#1、top、most popular 等最高级表达
 8. ⛔ **无 emoji**：标题和五点中禁止使用 emoji
-9. ⛔ **字符/字节限制**：标题 <= 200字符，ST <= 249 bytes
+9. ⛔ **字符/字节限制**：标题 <= 75 字符，商品亮点 <= 125 字符，ST <= 249 bytes
 10. ⛔ **Step 7 不可跳过**：数据溯源验证必须通过才能交付
 11. ⛔ **输出可复制**：标题、五点、描述、Search Terms 正文中**禁止出现** MCP 来源标签（如 `[MCP:xxx]`）、竞品 ASIN（如 `B0XXXXXX`）、内部注释。这些内容必须是纯消费者语言，可直接复制到 Amazon Seller Central。来源引用集中在文末**数据溯源表**中。
 
@@ -382,3 +381,14 @@ description: 当用户要为亚马逊产品（尤其定制/个性化产品）写
 - `amazon-listing-writer/references/rufus_cosmo_guide.md`
 - `amazon-listing-writer/references/listing_output_spec.md`
 - `amazon-listing-writer/references/prompt_templates.md`
+
+---
+
+## 2026-10-30 / 11-03 修订
+
+- **标题 ≤75 字符**（亚马逊模块化标题政策，2026-07-27 生效；以官方政策为准）。核心词放最前，场景词放商品亮点。
+- **商品亮点（Item Highlights）≤125 字符**，`validate_listing.py` 会校验（找不到亮点段只警告）。
+- 若店铺无品牌备案：Brand 字段填 **Generic**，标题首词换成你的店铺名（文档里的 `<YOUR_BRAND>` 只是占位符，不要原样写入标题；标题不能含 `_`）。
+- 老链接一次只改一条；是否先在某一个 ASIN 上试点，由用户决定。
+- 纪念/悼念类文案语气克制，避开 MINI ME、FOREVER IN MY HEART、hugs from heaven（商标风险）。
+- 只出稿时不建 listing；进入卖家后台前需用户当次确认。

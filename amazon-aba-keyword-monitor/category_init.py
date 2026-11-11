@@ -16,7 +16,6 @@ import config
 
 logger = logging.getLogger(__name__)
 
-
 def slugify(name):
     """中文类目名转英文 slug，用于目录名"""
     # 常见类目映射
@@ -38,9 +37,8 @@ def slugify(name):
     clean = re.sub(r'[^\w\s-]', '', name.lower())
     return re.sub(r'[\s]+', '-', clean).strip('-') or "custom-category"
 
-
 def run_init(name=None, slug=None, force=False):
-    """类目初始化（box 版：非交互，参数传入）
+    """类目初始化（非交互，参数传入）
     python main.py init --name "定制皮革笔记本" --slug custom-leather-notebook [--force]
     """
     if not config.check_sorftime_ready():
@@ -111,7 +109,6 @@ def run_init(name=None, slug=None, force=False):
     })
 
     return True
-
 
 def run_init_confirm(yes=False):
     """确认 agent 生成的词典，保存到 data 目录"""

@@ -5,4 +5,5 @@ description: 当用户要从核心词根和竞品 ASIN 构建亚马逊关键词�
 # 亚马逊关键词库构建
 
 1. 先用 Read 完整读取 `amazon-keyword-analyzer/SKILL_FULL.md`（完整方法论、脚本用法、判断标准、输出模板）。
-2. 严格按其中步骤执行；脚本和参考资料都在 `amazon-keyword-analyzer/`，Python 用 `python`。
+2. 严格按其中步骤执行；脚本和参考资料都在 `amazon-keyword-analyzer/`，Python 用 `python`（共享 venv）。
+

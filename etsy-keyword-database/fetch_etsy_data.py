@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Etsy 数据采集（box 版）：直接调用 Etsy Open API v3（只读，无需 OAuth）。
+"""Etsy 数据采集：直接调用 Etsy Open API v3（只读，无需 OAuth）。
 替代原版占位的 "Etsy MCP" 调用。
   python fetch_etsy_data.py keywords.txt -o etsy_data.json [--limit 100] [--max-keywords N]
 环境变量：ETSY_API_KEY（keystring）+ ETSY_SHARED_SECRET；不会打印。
@@ -11,20 +11,17 @@ import urllib.request, urllib.parse, urllib.error
 
 API = "https://openapi.etsy.com/v3/application/listings/active"
 
-
 def _headers():
     k, s = os.environ.get("ETSY_API_KEY"), os.environ.get("ETSY_SHARED_SECRET")
     if not k:
         sys.exit("❌ 缺少环境变量 ETSY_API_KEY")
     return {"x-api-key": f"{k}:{s}" if s else k, "User-Agent": "etsy-keyword-db/1.0"}
 
-
 def _price(p):
     try:
         return p["amount"] / p["divisor"]
     except Exception:
         return None
-
 
 def fetch_keyword_data(keyword, limit=100, sort_on="score", retries=3):
     q = urllib.parse.urlencode({"keywords": keyword, "limit": limit, "sort_on": sort_on})
@@ -61,7 +58,6 @@ def fetch_keyword_data(keyword, limit=100, sort_on="score", retries=3):
         "fetch_time": datetime.now().isoformat(),
     }
 
-
 def main():
     ap = argparse.ArgumentParser(description="Etsy 关键词数据采集（Etsy API v3）")
     ap.add_argument("input", help="关键词列表文件（每行一个）")
@@ -86,7 +82,6 @@ def main():
            "generated_at": datetime.now().isoformat()}
     json.dump(out, open(a.output, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     print(f"✅ 已保存 {a.output}（成功 {out['success']} / 失败 {out['failed']}）")
-
 
 if __name__ == "__main__":
     main()

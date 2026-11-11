@@ -1,4 +1,4 @@
-<!-- 功能模式（原 feature-demand-validator），已改为 box 路径；Sorftime 走 user-sorftime MCP 或 _shared/sorftime_http.py -->
+<!-- 功能模式（原 feature-demand-validator）。路径相对本仓库。Sorftime 走环境变量或 _shared/sorftime_http.py，不要把密钥写进仓库。 -->
 ---
 name: feature-demand-validator
 description: 功能需求真伪验证器。在产品开发决策前，用三维数据（Review 信号、关键词信号、社区信号）验证某个新功能/细分功能是真实市场需求还是伪需求。使用时机：品类选定后评估微创新是否值得投入、竞品分析中发现功能差异点后判断要不要跟进。

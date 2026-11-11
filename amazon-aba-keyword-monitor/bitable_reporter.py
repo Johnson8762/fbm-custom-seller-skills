@@ -1,4 +1,4 @@
-"""飞书多维表格报告（box 移植版：lark-cli → 飞书 Open API，经 _shared/feishu_bitable.py）
+"""飞书多维表格报告（lark-cli → 飞书 Open API，经 _shared/feishu_bitable.py）
 
 首次运行：创建 Bitable（立即转移所有权给用户）+ 3 张表 + 2 个筛选视图
 后续运行：复用 data/<slug>/category_config.json 中的 bitable_token / table_ids，追加本周数据
@@ -20,14 +20,11 @@ BURST_LABEL = {"first_burst": "首次爆发", "rebound": "回弹", "steady_rise"
 CATEGORY_LABEL = {"ingredient": "核心产品", "benefit": "功效/场景", "brand": "品牌",
                   "condition": "场景/症状", "form": "形态/规格", "irrelevant": "无关", "unrelated": "无关"}
 
-
 def _sel(names):
     return {"options": [{"name": n} for n in names]}
 
-
 def _numf(fmt="0"):
     return {"formatter": fmt}
-
 
 KEYWORD_FIELDS = [
     {"field_name": "关键词", "type": fb.TEXT},
@@ -70,13 +67,11 @@ SUMMARY_FIELDS = [
     {"field_name": "生成时间", "type": fb.DATETIME, "property": {"date_formatter": "yyyy/MM/dd HH:mm"}},
 ]
 
-
 def _f(v):
     try:
         return float(v)
     except (TypeError, ValueError):
         return 0.0
-
 
 def _enrich(td, keyword_analysis):
     d = {"关键词": td.keyword, "中文名": td.zh_name or "", "Tier": f"Tier {td.tier}",
@@ -104,7 +99,6 @@ def _enrich(td, keyword_analysis):
     d["AI分析"] = keyword_analysis.get(td.keyword, "")
     return d
 
-
 def _setup_views(cli, kw_table):
     vids = {name: cli.create_view(kw_table, name) for name in ("Tier 1 高优先级", "Tier 2 观察区")}
     if cli.dry:
@@ -116,7 +110,6 @@ def _setup_views(cli, kw_table):
             cli.set_view_filter(kw_table, vids[name], tier["field_id"], "is", json.dumps([opt[tname]]))
     except Exception as e:
         logger.warning(f"视图筛选设置失败（可在飞书 UI 手动设置）: {e}")
-
 
 def ensure_bitable(cli):
     bt = config.get_bitable_config()
@@ -148,7 +141,6 @@ def ensure_bitable(cli):
     logger.info("多维表格已创建（仪表盘需在飞书 UI 手动添加，Open API 不支持）")
     return {"bitable_token": token, "bitable_url": url, "table_ids": table_ids}
 
-
 def build_rows(results, tiered_data, analysis, now=None):
     now = now or datetime.now()
     week = f"{now.year}-W{now.isocalendar()[1]:02d}"
@@ -176,7 +168,6 @@ def build_rows(results, tiered_data, analysis, now=None):
                "新增词典词": "; ".join(f"{k}: {', '.join(v)}" for k, v in nw.items() if v),
                "生成时间": ts}
     return week, kw_rows, ext_rows, summary
-
 
 def generate_bitable_report(results, total_scraped, total_category, new_dict_words, analysis=None,
                             excluded_keywords=None, sorftime_stats=None, tiered_data=None, dry_run=False):

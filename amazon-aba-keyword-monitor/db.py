@@ -9,12 +9,10 @@ from analyzer import TrendData
 
 logger = logging.getLogger(__name__)
 
-
 def get_conn():
     conn = sqlite3.connect(config.get_db_path())
     conn.execute("PRAGMA journal_mode=WAL")
     return conn
-
 
 def init_db():
     import os
@@ -48,7 +46,6 @@ def init_db():
     except sqlite3.OperationalError:
         conn.execute("ALTER TABLE weekly_snapshots ADD COLUMN zh_name TEXT DEFAULT ''")
     conn.close()
-
 
 def save_results(results):
     now = datetime.now()

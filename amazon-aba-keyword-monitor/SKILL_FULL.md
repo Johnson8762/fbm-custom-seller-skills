@@ -1,6 +1,6 @@
 ---
 name: amazon-aba-keyword-monitor
-description: 当用户要做亚马逊 ABA 热搜词/爆品关键词监测（每周例行监测、发现某类目潜力爆发词、给新类目初始化监测词典、或把本周结果写进飞书多维表格）时使用。支持多类目（已有：定制姓名耳环 personalized-name-earrings、定制皮革笔记本 custom-leather-notebook），数据来自 AMZ123 ABA 榜单 + Sorftime。
+description: 当用户要做亚马逊 ABA 热搜词/爆品关键词监测（每周例行监测、发现某类目潜力爆发词、给新类目初始化监测词典、或把本周结果写进飞书多维表格）时使用。支持多类目（示例：定制姓名耳环 personalized-name-earrings、定制皮革笔记本 custom-leather-notebook），数据来自 AMZ123 ABA 榜单 + Sorftime。
 ---
 
 # 亚马逊 ABA 爆品关键词监测（通用多类目版）
@@ -11,7 +11,7 @@ Tier1/Tier2 再查 Sorftime（趋势/详情/延伸词），最后写入飞书多
 代码目录：`amazon-aba-keyword-monitor/`（下文简称 `$ABA`）
 Python：`python`（下文简称 `$PY`）
 
-## 前提（box 环境）
+## 前提
 
 - 环境变量：`SORFTIME_KEY`（Sorftime MCP key，HTTP 直连，不需 MCP 客户端）、`FEISHU_APP_SECRET`（飞书自建应用，同时需要 `FEISHU_APP_ID`、`FEISHU_OWNER_OPEN_ID`）。**永远不要打印这些值**。
 - 不再需要 lark-cli：飞书写入走 Open API（`_shared/feishu_bitable.py`）。
@@ -103,7 +103,7 @@ $PY $ABA/main.py step3 --category <slug>             # 正式写入
 
 筛选视图：**Tier 1 高优先级**、**Tier 2 观察区**（按 Tier 过滤）。
 
-⚠️ box 版限制：飞书 Open API 不支持创建仪表盘，视图的"按排名变化降序"排序也需在飞书界面手动设置一次。原版 5 个图表（关键词总数卡片、Tier 分布饼图、爆发类型饼图、分类分布饼图、周搜索量柱状图）如需要，请让用户在飞书里手动添加仪表盘（一次即可，之后数据自动更新）。
+⚠️ 接口限制：飞书 Open API 不支持创建仪表盘，视图的"按排名变化降序"排序也需在飞书界面手动设置一次。原版 5 个图表（关键词总数卡片、Tier 分布饼图、爆发类型饼图、分类分布饼图、周搜索量柱状图）如需要，请让用户在飞书里手动添加仪表盘（一次即可，之后数据自动更新）。
 
 ## 测试/限流开关（环境变量）
 - `ABA_MAX_COMBOS=1 ABA_MAX_PAGES=1`：只抓 1 组 × 1 页（试跑）
@@ -118,3 +118,10 @@ $PY $ABA/main.py step3 --category <slug>             # 正式写入
 ## 已有类目参考
 - `personalized-name-earrings`（定制姓名耳环）：已绑定用户现有多维表格（主表字段名与本版不同，首次正式写入会新增缺失字段并补建「扩展关键词」「周报摘要」两张表——写入前先告知用户）。
 - `custom-leather-notebook`（定制皮革笔记本）：词典来自 Leather 版的完整草稿（ingredients 68 / benefits 48 / brands 15 / markers 35，排除规则 16 条 pattern + 44 个词），尚未绑定表格，首次 step3 会新建。
+
+---
+
+## 2026-11-03 修订
+- 报表可以另加两列：**「首页同款数」**（该词首页与你的店铺同类定制品数量）和 **「竞争度」**；预算建议往竞争小的长尾词倾斜。这两列还没有写进 `bitable_reporter.py` / `reporter.py`，需要时请手工补列。
+- 若类目榜与店铺词库相关度不足，可改为监测你自己的词库，并将结果写入你的飞书多维表格（URL 与 token 用环境变量配置，不要写进仓库）。
+- 如需推送通知，使用你自己的飞书通知脚本；需要 `SORFTIME_KEY`（见 `.env.example`）。

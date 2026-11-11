@@ -1,0 +1,33 @@
+{
+  "_note": "产品事实清单模板：只写清单里已确认的内容。每条注明状态与来源（使用者确认 / 供应商页 URL+日期 / 使用者提供的成本）。status 只能是 已确认 / 待确认 / 老板后台填写；validate_listing.py --facts 遇到 待确认 即 ERROR。不要把真实产品事实提交到公开仓库。",
+  "product": "<product_id>",
+  "listing_ids": [],
+  "supplier": {"name": "", "url": "", "checked_on": ""},
+  "min_margin_pct": null,
+  "facts": [
+    {"item": "面料/材质", "value": "", "status": "待确认", "source": ""},
+    {"item": "填充/结构", "value": "", "status": "待确认", "source": ""},
+    {"item": "印刷工艺/印刷面", "value": "", "status": "待确认", "source": ""},
+    {"item": "尺寸/尺码表", "value": "", "status": "待确认", "source": ""},
+    {"item": "变体及是否同价", "value": "", "status": "待确认", "source": ""},
+    {"item": "可定制内容（能做/不能做）", "value": "", "status": "待确认", "source": ""},
+    {"item": "收图/收字方式", "value": "", "status": "待确认", "source": ""},
+    {"item": "预览/修改次数", "value": "", "status": "待确认", "source": ""},
+    {"item": "处理时间", "value": "", "status": "待确认", "source": ""},
+    {"item": "送达时间（从发货还是下单起算）", "value": "", "status": "待确认", "source": ""},
+    {"item": "落地成本（分尺寸，CNY）", "value": "", "status": "待确认", "source": "使用者提供，不要估算"},
+    {"item": "包装/重量", "value": "", "status": "待确认", "source": ""},
+    {"item": "退货政策", "value": "", "status": "待确认", "source": ""},
+    {"item": "运费模板（包邮/发货地如实）", "value": "", "status": "老板后台填写", "source": "skill 规则：Agent 不代填发货地"},
+    {"item": "Who made / 生产合作方", "value": "", "status": "老板后台填写", "source": "skill 规则"},
+    {"item": "实拍图（至少 1 张未修图）", "value": "", "status": "待确认", "source": ""},
+    {"item": "工艺确认（轮廓/缝线/印刷/变形/打样证据）", "value": "见 references/manufacturing-checklist.md", "status": "待确认", "source": ""},
+    {"item": "墨西哥 RFC", "value": "", "status": "待确认", "source": "由使用者填写。示例费用表不代表任何店铺已有 RFC"},
+    {"item": "Renewal", "value": "Manual", "status": "已确认", "source": "技能默认：续期用 Manual。请确认与店铺设置一致"}
+  ],
+  "do_not_write": [
+    {"pattern": "ships? from|made in|overseas|warehouse", "why": "不写发货地/产地；运费模板如实"},
+    {"pattern": "hypoallergenic|non-toxic|chemical-free|certified", "why": "无检测报告"},
+    {"pattern": "guarantee", "why": "保证类承诺"}
+  ]
+}

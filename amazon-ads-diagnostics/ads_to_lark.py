@@ -20,12 +20,10 @@ ACT = [("关键词", T), ("Campaign", T), ("Ad Group", T), ("匹配类型", T),
        ("优先级", 3, {"options": [{"name": n} for n in ("P0", "P1", "P2")]}), ("建议动作", T), ("依据", T),
        ("出价", N), ("建议出价", N), ("花费", N), ("点击", N), ("订单", N), ("ACOS", N, PCT), ("CVR", N, PCT), ("执行状态", T)]
 
-
 def norm_acos(v):
     """30 / 0.30 / '30%' → 0.30（与 ads_csv_analyzer.py 相同口径）"""
     v = float(str(v).replace("%", "").strip())
     return round(v / 100, 6) if v > 1 else v
-
 
 def fdef(spec):
     d = {"field_name": spec[0], "type": spec[1]}

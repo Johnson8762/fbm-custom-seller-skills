@@ -5,22 +5,21 @@ description: 当用户提供产品实物照片和产品信息，要生成或规�
 
 # 亚马逊 AI 产品图片资产生成器（amazon-listing-image-prompts）
 
-## 运行环境（box）——合并说明
+## 运行环境——合并说明
 
 本技能合并了原 `Image-Skill` 与 `Image-Skill-Gemini`（两者方法论相同，仅出图工具不同）。
 
-- 出图工具：原 `generate_image` / `gemini_generate_image`（Gemini MCP）→ box 内置 **`GenerateImage`**（`cursor` 命名空间）
+- 出图工具：原 `generate_image` / `gemini_generate_image`（Gemini MCP）→ 使用者自己的出图工具
   - 参数：`description`（英文 Prompt）、`reference_image_paths`（**只放用户产品照片**，对应原 ImagePaths 隔离规则）、`aspect_ratio`（主图/辅图用 `1:1`，A+ 横幅用 `16:9`）、`filename`
   - 生成的文件需复制到 `reports/image-assets/[产品]/generated/`，参考照片与结构蓝图放 `reports/image-assets/[产品]/reference/`
   - 交付时给出生成图的 file:// 链接；每张图仍须按「规则 D」与实物照片逐项比对，不通过就重新生成
 - 资料：`amazon-listing-image-prompts/references/`（合规指南、Prompt 工程词典、各类型模板）
 - Prompt 可视化：`python amazon-listing-image-prompts/render_image_prompts_html.py <prompts.json> <out.html>`；示例输入 `amazon-listing-image-prompts/examples/sample_prompts.json`
-- Sorftime：box 上已接入 Sorftime MCP（`user-sorftime` 命名空间，先 `GetDynamicTools` 看参数再 `CallDynamicTool`）；脚本内调用用 `_shared/sorftime_http.py`（读环境变量 `SORFTIME_KEY`，**绝不打印**）。下文所有 `MCP:工具名` 都指这些 Sorftime 工具。
+- Sorftime：脚本用 `_shared/sorftime_http.py`（读环境变量 `SORFTIME_KEY`，**绝不打印**）。只有配置了密钥，或使用者自己接入 Sorftime 时才能调用；下文 `MCP:工具名` 指 Sorftime 工具名，不是本仓库自带的服务。
 - 竞品主图（规则 20）：用 Sorftime `product_content` / `product_detail` 取图片链接，或用浏览器打开亚马逊页面；竞品图只做人工分析，**绝不放进 reference_image_paths**
-- 原 Gemini 版中的 Gemini 账号切换段（含个人邮箱）已删除，不适用于 box
+- 不要把个人邮箱、账号切换或登录信息写进技能
 
 ---
-
 
 ## 定位
 
@@ -668,3 +667,22 @@ Rationale: [Why this change might improve CTR/CVR]
 1. 执行完整的 Step 0 数据采集
 2. 自建视觉策略简报
 3. 所有数据点标注 MCP 来源
+
+---
+
+## 2026-11-01 修订：做图必走 5 步 + 质检 + AI 元数据
+
+> 来源：对照「商品视觉导演 Skill 3.0」（苏乐Subi 公众号文章）后，由用户确认写入本技能和 etsy-listing-image-generator v3.3。原有规则全部保留（不编造产品、用真实成品照、每张图只做一件事、先拆竞品、定制品特殊规则如填充异形抱枕会变形、自动质检、写 alt text）。
+
+1. **开工前先问齐。** 先列一张产品信息表（`intake.md`）：尺寸、材质工艺、定制方式、能做/不能做、销售站点、手上有哪些实拍图。能从已有资料查到的自己填并注明出处，缺的一次性问用户。**没补齐就不出图。**
+2. **调研买家顾虑。** 看竞品差评和问答，再加上使用者自己提供的社区笔记（如果有）。没有笔记就只搜 Reddit 公开帖。每个高频顾虑至少一张图回答。抓不到数据如实写明，不编。
+3. **先出 2 张样图。** 先做主图和最难的那张副图，连同整套方案发给用户；确认前其余不做。用户说「直接出全套」才跳过。
+4. **每张图附做图理由**（`design_rationale.md`）：回答哪个顾虑、为什么选这个场景和构图、图上每句文字的依据、重做过几次及原因。
+5. **手机显示与本土化检查。** 缩到手机尺寸确认文字和卖点看得清，主图在搜索结果小图里认得出产品；单位与场景按站点（美国站 inch / lb）。
+
+### 质检与交付
+- 成品放 `reports/image-assets/<product>/generated/`，同目录写 `intake.md`、`design_rationale.md`、`qc_report.md`、`contact_sheet.png`。
+- 跑 `python amazon-listing-image-prompts/image_qc.py <generated目录> --require-ai-meta`（尺寸、主图纯白边框、产品填充 ≥85%、文字检测、AI 元数据、手机缩略图）。
+- 主图：纯白底、无文字水印、产品填充率按亚马逊建议 ≥85%（用 image_qc 测量，不要把某一次测量值写进技能）。
+- **AI 生成图（尤其带人像）必须写 AI 元数据**：XMP `Iptc4xmpExt:DigitalSourceType = trainedAlgorithmicMedia`，Description / Credit = "AI-generated"，草稿阶段 XMP Label = DRAFT；写完回读确认。可用 `amazon-listing-image-prompts/write_ai_metadata.py`。提醒用户亚马逊上传后可能剥离元数据；AI 人像近看偏软、白边宽度/背面字体/尺寸比例只是示意。
+- 不登录、不上传，除非用户明确要求。

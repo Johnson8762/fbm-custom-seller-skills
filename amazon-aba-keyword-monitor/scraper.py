@@ -15,7 +15,6 @@ import config
 
 logger = logging.getLogger(__name__)
 
-
 @dataclass
 class KeywordEntry:
     keyword: str
@@ -24,10 +23,8 @@ class KeywordEntry:
     rank_change: int
     combo_label: str
 
-
 def build_url(page: int, rank: str, uprank: str) -> str:
     return f"{config.AMZ123_BASE_URL}/{page}?rank={rank}&uprank={uprank}&s=&k=&o="
-
 
 def parse_page(html: str, combo_label: str) -> list[KeywordEntry]:
     entries = []
@@ -72,7 +69,6 @@ def parse_page(html: str, combo_label: str) -> list[KeywordEntry]:
             logger.debug(f"解析条目失败: {e}")
     return entries
 
-
 def fetch_page(url: str) -> Optional[str]:
     try:
         headers = {
@@ -88,7 +84,6 @@ def fetch_page(url: str) -> Optional[str]:
     except Exception as e:
         logger.error(f"抓取失败 {url}: {e}")
         return None
-
 
 def scrape_all_combos() -> list[KeywordEntry]:
     all_entries: dict[str, KeywordEntry] = {}
@@ -115,7 +110,6 @@ def scrape_all_combos() -> list[KeywordEntry]:
     result = list(all_entries.values())
     logger.info(f"抓取完成，共 {len(result)} 个去重关键词")
     return result
-
 
 def entries_to_dicts(entries: list[KeywordEntry]) -> list[dict]:
     return [asdict(e) for e in entries]

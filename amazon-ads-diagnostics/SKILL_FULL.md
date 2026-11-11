@@ -5,11 +5,11 @@ description: 当用户要诊断亚马逊 SP 广告表现（ASIN 广告结构、C
 
 # 亚马逊广告诊断专家（Amazon Ads Diagnostics - SIF MCP）
 
-## 运行环境（box）——SIF 替代说明（必读）
+## 运行环境——SIF 替代说明（必读）
 
-原技能完全依赖 SIF MCP（`ads_*` / `market_*` / `ops_*` / `analyze_traffic_anomaly`），**SIF 在 box 上不可用**。替代方案：
+原技能完全依赖 SIF MCP（`ads_*` / `market_*` / `ops_*` / `analyze_traffic_anomaly`），**如果没有 SIF MCP**。替代方案：
 
-| 原 SIF 工具 | box 替代 |
+| 原 SIF 工具 | 没有 SIF 时的替代 |
 |---|---|
 | `ads_get_asin_campaign_contribution_overview` / `ads_get_campaign_contribution_breakdown` / `ads_get_ad_group_keyword_breakdown` / `ads_get_asin_ad_structure` | 用户从广告后台导出 **SP 搜索词报告 / 投放报告 / 广告活动报告**（CSV/XLSX，中英文表头均可）→ `python amazon-ads-diagnostics/ads_csv_analyzer.py <搜索词报告> [--campaign-report <广告活动报告>] --asin <ASIN> --target-acos 30 --target-roas 3 --days 30 [--protect-terms "核心词,…"] [--irrelevant-terms "无关词,…"] [--competitor-brands "竞品品牌,…"] -o analysis.json`（领星导出的中文表头 xlsx 可直接用，首行「汇总」自动跳过） |
 | `ads_get_asin_ad_traffic_trend` / `ads_get_ad_group_traffic_trend` | 导出多个时间段报告分别分析后对比；无法自动获得日趋势 |
@@ -22,16 +22,15 @@ description: 当用户要诊断亚马逊 SP 广告表现（ASIN 广告结构、C
 
 - 分析脚本规则：Campaign 健康度阈值（ACOS<目标 / ×1.2、ROAS>目标 / ×0.8、CTR 0.5%/0.3%、CVR 10%/5%）与原文一致；关键词/活动动作规则已于 2026-10-25 加入**样本量门槛**（收割 ≥2 单、否定 ≥10 点击、调价 ≥20 点击、单轮降价 ≤25%，见下文「关键词优化建议逻辑」），门槛集中在脚本顶部 `GATES`；示例 `amazon-ads-diagnostics/examples/sample_search_term_report.csv`
 - 飞书多维表格（原规则 5）：`python amazon-ads-diagnostics/ads_to_lark.py analysis.json` 先 dry-run 预览，用户确认后加 `--live` 创建「总览 / Campaign 监控 / 动作清单」三表；新表自动转移所有权给用户；不删除任何已有表格。仪表盘与视图排序需在飞书界面手动设置（Open API 不支持）
-- Sorftime：box 上已接入 Sorftime MCP（`user-sorftime` 命名空间，先 `GetDynamicTools` 看参数再 `CallDynamicTool`）；脚本内调用用 `_shared/sorftime_http.py`（读环境变量 `SORFTIME_KEY`，**绝不打印**）。下文所有 `MCP:工具名` 都指这些 Sorftime 工具。
+- Sorftime：脚本用 `_shared/sorftime_http.py`（读环境变量 `SORFTIME_KEY`，**绝不打印**）。只有配置了密钥，或使用者自己接入 Sorftime 时才能调用；下文 `MCP:工具名` 指 Sorftime 工具名，不是本仓库自带的服务。
 - 报告保存：`reports/ads/ads-report-{ASIN}-{YYYYMMDD}.md`
 - 原 SIF 工具速查表保留在 `amazon-ads-diagnostics/sif-tools-quick-ref.md`，仅供理解原方法论
-- 本店为 FBM 定制产品：转化周期含定制制作时间，CVR 判断时注意样本量（点击 <20 不调价、<10 不否词，见门槛表）
+- 如果卖的是 FBM 定制品：转化周期含定制制作时间，CVR 判断时注意样本量（点击 <20 不调价、<10 不否词，见门槛表）
 - `--target-acos` 写 `30` 或 `0.30` 都可以（>1 视为百分数）；JSON 统一存小数 `target_acos: 0.3`（另有 `target_acos_pct: 30`），`ads_to_lark.py` 用同一口径读取，旧 JSON 存 30 也能正确识别
 - 目标 CPA 缺省 = 报告平均客单价 × 目标 ACoS（`--target-cpa` 可覆盖），用于「0 单花费 ≥ 2×目标 CPA」否词条件
 - `--protect-terms` / `--irrelevant-terms` / `--competitor-brands` 由 Agent 按本次产品填写，并在报告中列出所填词表（这是人工判断，不是数据）
 
 ---
-
 
 ## 定位
 
@@ -130,7 +129,7 @@ ads-report-{ASIN}-{YYYYMMDD}.md
 
 ## 第 1 步：先判产品阶段，再定打法与目标 ACoS
 
-> 来源：BSC `SKILL.md` 第 294、322 行（按产品阶段给 ACoS/TACoS 目标）、第 382、389 行（成熟款不套新品冷启动模板，改为重启/结构重做）。阶段参考 ACoS 区间仅 nexscope-ai/Amazon-Skills `amazon-advertising-strategy/SKILL.md` 给出（新品 40–60% / 成长 25–35% / 成熟 15–25%；BSC 本身不给数字）；外部共识「必须先算盈亏平衡 ACoS」见 ggrnpro / AdlevateDE / sellerstack 等（汇总于 `reports/ads/ads-benchmarks-github-20261025.md`）。
+> 来源：BSC `SKILL.md` 第 294、322 行（按产品阶段给 ACoS/TACoS 目标）、第 382、389 行（成熟款不套新品冷启动模板，改为重启/结构重做）。阶段参考 ACoS 区间仅 nexscope-ai/Amazon-Skills `amazon-advertising-strategy/SKILL.md` 给出（新品 40–60% / 成长 25–35% / 成熟 15–25%；BSC 本身不给数字）；外部共识「必须先算盈亏平衡 ACoS」见 ggrnpro / AdlevateDE / sellerstack 等公开材料。本仓库不附带内部汇总报表。
 
 **锚点：盈亏平衡 ACoS =（售价 − 产品成本 − 定制/包装 − FBM 国际运费 − 佣金及其他费用）÷ 售价**。任何阶段的目标 ACoS **都不得高于盈亏平衡 ACoS**；拿不到成本时用默认 30% 并标 ⚠️。
 
@@ -556,7 +555,7 @@ ads-report-{ASIN}-{YYYYMMDD}.md
 
 ### 样本量门槛（2026-10-25 新增，先过门槛再套动作表）
 
-> 来源（外部共识，汇总于 `reports/ads/ads-benchmarks-github-20261025.md`）：否词 10 点击 0 单——sellerstack / nexscope / JayGPTPro / jinmingai；收割 ≥2 单——sellerstack `bulk-schema-and-thresholds.md` / nexscope / jinmingai / TermSweep；调价前 ≥20 点击——nexscope `amazon-ppc-campaign/SKILL.md` / Wany-i / RedHen / jinmingai；0 单花费 ≥2×目标 CPA——shelfwerk TermSweep `method.md`；1 次点击 1 单不加价——nospicyplease `05-low-sample-winner.md`。单轮降价上限 25%：多数仓库给 −10%~−25%。
+> 来源（外部公开材料，本仓库不附带内部汇总报表）：否词 10 点击 0 单——sellerstack / nexscope / JayGPTPro / jinmingai；收割 ≥2 单——sellerstack `bulk-schema-and-thresholds.md` / nexscope / jinmingai / TermSweep；调价前 ≥20 点击——nexscope `amazon-ppc-campaign/SKILL.md` / Wany-i / RedHen / jinmingai；0 单花费 ≥2×目标 CPA——shelfwerk TermSweep `method.md`；1 次点击 1 单不加价——nospicyplease `05-low-sample-winner.md`。单轮降价上限 25%：多数仓库给 −10%~−25%。
 
 | 动作 | 门槛 | 说明 |
 |------|------|------|
@@ -710,3 +709,43 @@ ads-report-{ASIN}-{YYYYMMDD}.md
 ## License
 
 MIT
+
+---
+
+## 2026-11-03 修订（规则以本节为准，冲突时覆盖上文）
+
+> 来源：对照公开的亚马逊广告运营课程笔记后，由用户批准将规则写入本技能。冲突时以本节为准。不要在公开副本中引用私有知识库路径或内部报表文件。
+
+### A. 目标 ACoS：按单品盈亏线，不再统一 30%
+- 目标 ACoS 取每个产品（必要时每个变体）的盈亏平衡 ACoS 或财务负责人给的目标 ACoS（例如净利 10% 口径），**不得高于盈亏平衡**。数据来自你的产品成本库；拿不到才退回默认 30% 并标 `⚠️ 估算`。
+- 不要把真实 ASIN、SKU、售价或利润率写进可公开的技能文件；用前按成本库逐产品核对。
+- 出价上限 = 单件利润 × CVR（按目标 ACoS 时再 × 目标/盈亏）；点击 <100 的产品 CVR 用账户基线，并标 `⚠️ 估算`。
+
+### B. 广告花费占比（TACoS 口径）
+- 长期目标：广告花费 ÷ 总销售额 = **10–15%**。
+- 未降到目标前**不加总预算，只在活动之间挪**（>30% 时严格「只挪不加」）；新品推广期可暂时超出，但 0 单时不支持加预算。
+- 金牌词（已验证 ≥2 单且 ACoS ≤ 目标）的预算可以不封顶。
+- 挪预算的接收方单轮最多 +20%，且需「实际购买变体利润核清 + 同词/活动足够订单 + ACoS 达标 + 确实受预算限制」。
+
+### C. 样本量门槛（覆盖上文「样本量门槛」表中的 10 次）
+- **否定门槛统一为 ≥20 次点击 0 单**；否之前先到前台核实相关性。未到 20 次点击时，只有**明显无关词**（如 Pillow Pets / Pillow People 这类品牌、weird stuff）可直接精否；custom、customization 这类相关词不否，继续观察。
+- 保险规则保留：单词 0 单花费 ≥ 2×目标 CPA，即使未到 20 次点击也可建议否（脚本仍实现）。使用者若要求必须满 20 次点击才否定，再改脚本门槛。
+- 18 次点击是「整款合计」时不能套到单个词；门槛按对象（词/投放组/活动）逐个算。
+- 调价仍需 ≥20 次点击；单轮降价 ≤25%；同一对象改后 **7 天冷却**再评估；活动结构改动（新建/拆分）满 **14 天**再看。单轮改动 ≤10 条。
+
+### D. 售价与 Listing
+- **不直接降售价**；新品要降价用 Coupon。任何改价必须先报告用户（改在哪、现价、新价、有无 Sale Price/Coupon），得到确认后再执行，执行后核对前台。
+- 遇到「降价」类建议时，先核实改的是商品售价还是广告竞价，不要把两者混为一谈。
+
+### E. 诊断顺序
+- 先分清问题在 **曝光 → 点击率 → 转化** 哪一段，再动广告；有点击没转化（如抱枕、笔记本）优先查主图、定制加价说明、交期、评论与页面承接，而不是加价或否词。
+- 复盘加「展示量份额（IS）」报表；拿不到就写数据缺口。
+- 数据窗口排除最近 1–2 天（归因回补），报告写清美西报表日期和北京时间。
+- 竞品反查词（西柚 / Sorftime）只算「广告覆盖词」候选，不等于竞品出单词，不直接照抄投放。
+
+### F. 执行规范
+- 只有使用者确认过的动作才执行；动手前存回滚快照（截图 + 当前值）。
+- 自动投放组若单独设了竞价，须在「自动投放」里逐组改，只改广告组默认竞价不生效。
+- 预算改动前先查领星（含 App）有无分时/递增预算规则；有规则会覆盖手改值时先停下来报告，不自己改或删规则。
+- 每改一条在 `reports/ads/change_log.csv` 记一行（改前、改后、依据、回滚、复查日期、状态）。
+- 领星等后台登录：只用已保存的账号，不输入密码；进入卖家或 ERP 环境须得到用户当次确认。

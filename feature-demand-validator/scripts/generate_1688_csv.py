@@ -36,7 +36,6 @@ CSV_COLUMNS = [
     "数据来源", "来源类型", "来源链接/查询词", "原始文件名", "采集时间",
 ]
 
-
 def process_1688_data(data: dict, source_ref: str, raw_file: str,
                       captured_at: str | None = None) -> list[dict]:
     rows: list[dict] = []
@@ -60,7 +59,6 @@ def process_1688_data(data: dict, source_ref: str, raw_file: str,
         })
 
     return rows
-
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="1688 供应商数据导出为标准 CSV")
@@ -89,7 +87,6 @@ def main() -> int:
 
     print(json.dumps({"csv_path": args.output, "csv_rows": len(rows)}, ensure_ascii=False))
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

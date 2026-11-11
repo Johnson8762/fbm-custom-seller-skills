@@ -1,0 +1,29 @@
+{
+  "_note": "示例图片方案（人形抱枕，远距离送礼场景）。不是真实 listing。file 路径相对本 json。",
+  "product": "person_shaped_pillow_long_distance",
+  "listing": "draft (new)",
+  "market": "US",
+  "units": "inch + cm",
+  "ai_disclosure": true,
+  "real_photo_slot": 3,
+  "forbidden_poses": ["3d hug", "arms-out", "arms out", "open arms"],
+  "samples_gate": {"status": "pending", "hardest_slot": 5},
+  "product_facts": "products/person_pillow/facts.json",
+  "buyer_concerns": [
+    {"concern": "Will the face still look like my person after stuffing?", "source": "竞品差评（示例）", "answered_by": "4"},
+    {"concern": "What size should I choose?", "source": "竞品问答（示例）", "answered_by": "5"}
+  ],
+  "slots": [
+    {"slot": 1, "kind": "ai", "job": "main hook: gift moment for long-distance couple", "new_info": "what the product is and who it is for",
+     "reason": "high-review competitors open with an emotional gift scene; no text on main image", "source": "AI scene from boss product reference photo; product silhouette unchanged",
+     "prompt": "young woman at airport gate hugging a person-shaped pillow printed with her boyfriend, white cut border, soft daylight",
+     "claims": ["white border"], "visible_proof": {"white border": "thin white outline visible around the pillow silhouette"},
+     "file": "", "alt": "", "mobile_check": "pass"},
+    {"slot": 2, "kind": "ai", "job": "dorm / going-away use scene", "new_info": "everyday use after moving away", "reason": "second main scenario", "source": "AI", "file": "", "alt": "", "mobile_check": "pass"},
+    {"slot": 3, "kind": "reserved", "job": "unedited real photo (boss uploads)", "file": ""},
+    {"slot": 4, "kind": "edited", "job": "photo to pillow before/after", "new_info": "how the photo becomes the printed shape", "reason": "answers likeness concern",
+     "source": "factory photo F12, cropped and colour-matched only", "claims": ["no-border distortion"], "visible_proof": {"no-border distortion": "side-by-side: bordered vs no-border with visibly thinner limbs"}, "file": "", "alt": "", "mobile_check": "pass"},
+    {"slot": 5, "kind": "ai", "job": "size comparison 10-70cm", "new_info": "real scale of each size", "reason": "size questions are the top pre-purchase concern",
+     "source": "AI; sizes from facts.json", "claims": ["size difference"], "visible_proof": {"size difference": "three pillows held by the same adult, 20/45/70 cm clearly different heights"}, "file": "", "alt": "", "mobile_check": "pass"}
+  ]
+}

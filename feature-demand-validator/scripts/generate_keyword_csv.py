@@ -41,15 +41,12 @@ SOURCE_TOOLS = {
     "extends": "mcp_sorftime_keyword_extends",
 }
 
-
 def load_data(path: str) -> list[dict]:
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
-
 def default_captured_at() -> str:
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
 
 def normalize_row(
     row: dict,
@@ -80,7 +77,6 @@ def normalize_row(
         else:
             out[col] = row.get(col, "N/A")
     return out
-
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Sorftime 关键词数据 → CSV")
@@ -119,7 +115,6 @@ def main() -> int:
     result = {"csv_path": args.output, "csv_rows": len(rows), "type": args.type}
     print(json.dumps(result, ensure_ascii=False))
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

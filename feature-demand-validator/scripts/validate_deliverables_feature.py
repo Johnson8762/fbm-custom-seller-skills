@@ -37,7 +37,6 @@ REQUIRED_COLUMNS = {
 
 REQUIRED_YAML_FIELDS = ["created", "topic", "type", "data_sources"]
 
-
 def find_report_md(base_dir: str) -> str | None:
     """在目录中查找验证报告 MD 文件。"""
     patterns = [
@@ -50,7 +49,6 @@ def find_report_md(base_dir: str) -> str | None:
             return matches[0]
     return None
 
-
 def find_data_dir(base_dir: str) -> str | None:
     """在目录中查找数据源子目录。"""
     patterns = [
@@ -62,7 +60,6 @@ def find_data_dir(base_dir: str) -> str | None:
         if matches and os.path.isdir(matches[0]):
             return matches[0]
     return None
-
 
 def check_yaml_header(md_path: str) -> list[str]:
     """检查 MD 文件的 YAML 头是否完整。"""
@@ -85,7 +82,6 @@ def check_yaml_header(md_path: str) -> list[str]:
             errors.append(f"YAML 头缺少字段: {field}")
 
     return errors
-
 
 def check_csv(csv_path: str, prefix: str) -> list[str]:
     """检查单个 CSV 文件的列完整性。"""
@@ -123,7 +119,6 @@ def check_csv(csv_path: str, prefix: str) -> list[str]:
 
     return errors
 
-
 def review_uses_fallback(csv_path: str) -> bool:
     with open(csv_path, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -132,7 +127,6 @@ def review_uses_fallback(csv_path: str) -> bool:
             if "manual" in source_type or "amazon" in source_type:
                 return True
     return False
-
 
 def find_review_source_pack(data_dir: str) -> Path | None:
     data_path = Path(data_dir)
@@ -147,7 +141,6 @@ def find_review_source_pack(data_dir: str) -> Path | None:
         if manifest.exists() and raw_dir.is_dir():
             return candidate
     return None
-
 
 def check_review_source_pack(data_dir: str) -> list[str]:
     errors: list[str] = []
@@ -169,7 +162,6 @@ def check_review_source_pack(data_dir: str) -> list[str]:
     if not raw_files:
         errors.append("review_source_pack/raw/ 下没有原始文件")
     return errors
-
 
 def validate(base_dir: str) -> dict:
     """执行完整校验，返回结果。"""
@@ -212,7 +204,6 @@ def validate(base_dir: str) -> dict:
         return {"status": "validate_fail", "errors": errors}
     return {"status": "validate_ok", "report": md_path, "data_dir": data_dir, "csv_count": len(csv_files)}
 
-
 def main() -> int:
     parser = argparse.ArgumentParser(description="校验功能需求验证报告的交付完整性")
     parser.add_argument("--dir", required=True, help="报告输出目录")
@@ -221,7 +212,6 @@ def main() -> int:
     result = validate(args.dir)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result["status"] == "validate_ok" else 1
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

@@ -157,9 +157,7 @@ FIELDS = [
     {"field_name": "备注", "type": 1},
 ]
 
-
 VIEWS = [("蓝海机会", "isGreater", "15"), ("待验证", "isGreater", "10"), ("红海预警", "isLess", "5")]
-
 
 def _setup_views(cli, tid):
     """建 3 个视图 + 蓝海指数筛选。飞书 API 不支持视图排序/分组 → 提示用户在 UI 里手动设置。"""
@@ -174,7 +172,6 @@ def _setup_views(cli, tid):
         print(f"⚠️ 视图筛选设置失败（可在飞书 UI 手动设置）: {e}")
     print("ℹ️ 视图排序/分组需在飞书里手动设置：蓝海机会按蓝海指数降序，待验证按搜索量降序（「待验证」上限 15 也需手动加）")
 
-
 def setup_table(name="Etsy 关键词数据库", dry_run=False):
     """新建多维表格 + 表（自动把所有权转给用户 open_id）。"""
     cli = Client(dry_run=dry_run)
@@ -185,7 +182,6 @@ def setup_table(name="Etsy 关键词数据库", dry_run=False):
     if not dry_run:
         json.dump(cfg, open(CONFIG_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     return cfg
-
 
 def sync_to_lark_table(data, app_token, table_id, dry_run=False):
     """按「关键词」upsert：已存在 → batch_update；不存在 → batch_create。从不删除记录。"""
@@ -212,7 +208,6 @@ def sync_to_lark_table(data, app_token, table_id, dry_run=False):
         cli.batch_create(table_id, new)
     print(f"✅ 同步完成：新增 {len(new)} / 更新 {len(upd)}" + ("（DRY-RUN，未写入）" if dry_run else ""))
     return True
-
 
 def generate_report(data: List[Dict]) -> str:
     """
@@ -303,7 +298,6 @@ def main():
         else:
             sys.exit("❌ 未配置飞书表格：先运行 --setup 或传 --app-token/--table-id")
     sync_to_lark_table(merged, app_token, table_id, dry_run=a.dry_run)
-
 
 if __name__ == "__main__":
     main()

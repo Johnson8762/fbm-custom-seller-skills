@@ -19,7 +19,6 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from browser_utils import fetch_page, fetch_page_with_location, get_site_config, check_captcha
 from bs4 import BeautifulSoup
 
-
 def extract_search_results(html: str, target_asin: str) -> dict:
     """从搜索结果 HTML 中提取数据"""
 
@@ -91,7 +90,6 @@ def extract_search_results(html: str, target_asin: str) -> dict:
 
     return result
 
-
 def main():
     parser = argparse.ArgumentParser(description="搜索亚马逊关键词并检查ASIN可见性")
     parser.add_argument("keyword", help="搜索关键词")
@@ -113,7 +111,6 @@ def main():
     data["url"] = url
 
     print(json.dumps(data, ensure_ascii=False, indent=2))
-
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""亚马逊广告诊断 —— CSV 模式（box 版，替代 SIF MCP）
+"""亚马逊广告诊断 —— CSV 模式（替代 SIF MCP）
 输入：亚马逊广告后台 / 领星导出的 Sponsored Products 报告（搜索词 / 投放 / 关键词 / 广告活动报告，CSV 或 XLSX，中英文表头均可）。
 按 SKILL「Campaign 健康度判断标准」「关键词优化建议逻辑（含样本量门槛）」逐行判定，输出 JSON（供 Agent 写报告/写飞书）。
   python ads_csv_analyzer.py report.xlsx --asin B0XXXX [--target-acos 30 | 0.30] [--target-roas 3.0] [--days 30] -o result.json
@@ -9,6 +9,8 @@
 2026-10-25 规则更新（样本量门槛，来源见 SKILL_FULL.md「关键词优化建议逻辑」）：
   收割 ≥2 单且 ACoS ≤ 目标；否定 ≥10 次点击 0 单（或花费 ≥ 2×目标 CPA），≤9 次点击只对无关/竞品品牌词做「人工复核」标记；
   任何出价调整需 ≥20 次点击；单轮降价最多 -25%；提价（CVR>15% 且展示<1000）另需 ≥2 单且 ≥10 次点击。
+2026-11-03 修订：否定门槛改为 ≥20 次点击 0 单；
+  同时保留保险规则「0 单花费 ≥ 2×目标 CPA 也建议否」。使用者若要求必须满 20 次点击才否定，再改 GATES。
 """
 import argparse, json, re, sys
 import pandas as pd
@@ -16,7 +18,7 @@ import pandas as pd
 # ---- 样本量门槛（改这里即可全局生效）
 GATES = {
     "harvest_min_orders": 2,      # 收割：≥2 单 且 ACoS ≤ 目标
-    "negate_min_clicks": 10,      # 否定：≥10 次点击 0 单
+    "negate_min_clicks": 20,      # 否定：≥20 次点击 0 单
     "negate_cpa_multiple": 2.0,   # 或 0 单花费 ≥ 2×目标 CPA
     "bid_change_min_clicks": 20,  # 任何调价（降/提）需 ≥20 次点击
     "max_bid_cut": 0.25,          # 单轮降价上限 -25%
@@ -41,20 +43,16 @@ ALIASES = {  # 每个 key 先找完全相同的列名，再找前缀匹配；顺
 AUTO_TARGETS = {"close-match", "loose-match", "substitutes", "complements", "紧密匹配", "宽泛匹配", "同类商品", "关联商品"}
 EMPTY = {"", "-", "--", "nan", "none"}
 
-
 def norm_acos(v):
     """30 / 0.30 / '30%' → 0.30。>1 视为百分数。"""
     v = float(str(v).replace("%", "").strip())
     return round(v / 100, 6) if v > 1 else v
 
-
 def _num(s):
     return pd.to_numeric(s.astype(str).str.replace(r"[$,%￥€£\s]", "", regex=True), errors="coerce").fillna(0)
 
-
 def _blank(v):
     return v is None or str(v).strip().lower() in EMPTY
-
 
 def load(path):
     df = pd.read_excel(path) if re.search(r"\.xlsx?$", path, re.I) else pd.read_csv(path, encoding="utf-8-sig")
@@ -83,14 +81,12 @@ def load(path):
             out["match"] = [t if _blank(mt) else mt for mt, t in zip(out["match"], out["targeting"])]
     return out, m
 
-
 def kpis(g):
     s = g.sum(numeric_only=True)
     sp, sa, cl, im, od = s.get("spend", 0), s.get("sales", 0), s.get("clicks", 0), s.get("impr", 0), s.get("orders", 0)
     return {"花费": round(float(sp), 2), "销售额": round(float(sa), 2), "展示": int(im), "点击": int(cl), "订单": int(od),
             "ACOS": round(sp / sa, 4) if sa else None, "ROAS": round(sa / sp, 2) if sp else None,
             "CTR": round(cl / im, 4) if im else None, "CVR": round(od / cl, 4) if cl else None}
-
 
 def health(k, t_acos, t_roas):
     lv = []
@@ -107,15 +103,12 @@ def health(k, t_acos, t_roas):
         lv.append(0 if cvr > 0.10 else 1 if cvr >= 0.05 else 2)
     return ["健康", "警告", "异常"][max(lv) if lv else 0]
 
-
 def _has(term, words):
     t = str(term or "").lower()
     return next((w for w in words if w and w in t), None)
 
-
 def is_auto(campaign, match):
     return str(match).strip().lower() in AUTO_TARGETS or bool(re.search(r"auto|自动", str(campaign), re.I))
-
 
 def kw_action(k, t_acos, ctx):
     """返回 (建议动作, 优先级, 依据, 调价比例或 None)。优先级 "" = 保持，不进动作清单。"""
@@ -180,7 +173,6 @@ def kw_action(k, t_acos, ctx):
         return "收割观察：1 单样本不足，可低价加入手动精准，不提价", "P2", f"{cl} 次点击 1 单（<{G['harvest_min_orders']} 单收割门槛）", None
     return "保持", "", "", None
 
-
 def campaign_action(k, t_acos, t_cpa):
     """活动级动作（同一套样本门槛）：返回 (建议动作, 优先级, 依据, 调价比例或 None)"""
     G = GATES
@@ -201,10 +193,8 @@ def campaign_action(k, t_acos, t_cpa):
         return "观察（样本不足，不调价）", "P2", f"ACoS {a:.0%}，仅 {cl} 次点击", None
     return "保持", "", "", None
 
-
 def split_terms(s):
     return [w.strip().lower() for w in (s or "").split(",") if w.strip()]
-
 
 def main():
     ap = argparse.ArgumentParser()
@@ -215,8 +205,8 @@ def main():
     ap.add_argument("--target-cpa", type=float, default=None, help="目标 CPA；缺省 = 报告平均客单价 × 目标 ACoS")
     ap.add_argument("--days", type=int, default=7, help="报告覆盖天数（仅记录）")
     ap.add_argument("--protect-terms", default="", help="核心相关词（逗号分隔）：达到否定门槛也不直接否，改为降价/单独测试")
-    ap.add_argument("--irrelevant-terms", default="", help="明显无关词（逗号分隔）：<10 次点击时标记人工复核")
-    ap.add_argument("--competitor-brands", default="", help="竞品品牌词（逗号分隔）：<10 次点击时标记人工复核")
+    ap.add_argument("--irrelevant-terms", default="", help="明显无关词（逗号分隔）：<20 次点击时标记人工复核")
+    ap.add_argument("--competitor-brands", default="", help="竞品品牌词（逗号分隔）：<20 次点击时标记人工复核")
     ap.add_argument("--campaign-report", default=None, help="可选：广告活动报告（全量花费），用于总览与活动级动作")
     ap.add_argument("-o", "--output", default="ads_diagnosis.json")
     a = ap.parse_args()
@@ -230,7 +220,7 @@ def main():
     res = {"asin": a.asin, "source": a.report, "days": a.days,
            "target_acos": a.target_acos, "target_acos_pct": round(a.target_acos * 100, 2), "target_roas": a.target_roas,
            "target_cpa": t_cpa, "target_cpa_note": "缺省 = 报告平均客单价 × 目标 ACoS" if not a.target_cpa else "用户提供",
-           "rules_version": "2026-10-25-sample-gates", "gates": GATES,
+           "rules_version": "2026-11-03", "gates": GATES,
            "term_lists": {k: ctx0[k] for k in ("protect", "irrelevant", "competitor")},
            "overview": ov, "campaigns": [], "keywords": []}
     cdf = df
@@ -276,7 +266,6 @@ def main():
     for p in ("P0", "P1", "P2"):
         print(f"   {p}: {sum(1 for k in res['keywords'] if k['优先级'] == p)} 条")
     print("   动作分布:", json.dumps(summ, ensure_ascii=False))
-
 
 if __name__ == "__main__":
     main()
